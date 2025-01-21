@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/job-portal}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/Job-Portal}
     username: postgres
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -12,13 +12,19 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-
+        default_schema: public
 
 
 
 api:
   prefix: api/v1
+
+jwt:
+  secret_key: ${SPRING_JWT_SECRET_KEY}
+  expiration: 2592000

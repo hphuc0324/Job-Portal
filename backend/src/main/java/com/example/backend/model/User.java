@@ -1,11 +1,10 @@
 package com.example.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,11 +15,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "users", schema = "public")
 public class User implements UserDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 
