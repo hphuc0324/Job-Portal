@@ -27,4 +27,5 @@ api:
 
 jwt:
   secret_key: ${SPRING_JWT_SECRET_KEY}
-  expiration: 2592000
+  expiration: 7200
+  refresh-expiration: 604800

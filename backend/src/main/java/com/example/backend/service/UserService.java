@@ -1,9 +1,12 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.RefreshTokenDTO;
 import com.example.backend.dto.UserLoginDTO;
 import com.example.backend.dto.UserRegisterDTO;
 import com.example.backend.model.Role;
+import com.example.backend.model.Token;
 import com.example.backend.model.User;
+import com.example.backend.repository.TokenRepository;
 import com.example.backend.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
@@ -25,6 +28,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final RoleService roleService;
+    private final TokenRepository tokenRepository;
 
     public String login(UserLoginDTO userLoginDTO) {
         String username = userLoginDTO.getEmail();
@@ -45,8 +49,6 @@ public class UserService {
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new RuntimeException("Wrong password");
         }
-
-
 
 
         String token = jwtService.generateToken(user);
@@ -78,6 +80,7 @@ public class UserService {
                 .email(userRegisterDTO.getEmail())
                 .password(passwordEncoder.encode(userRegisterDTO.getPassword()))
                 .role(role.get())
+                .status("active")
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -94,5 +97,29 @@ public class UserService {
         return user.get();
     }
 
+    public String refreshToken(String token, RefreshTokenDTO refreshTokenDTO){
+        if(jwtService.validateToken(token)){
+            throw new RuntimeException("Token still ok");
+        }
 
+        Optional<Token> foundToken = tokenRepository.findByToken(token);
+
+        if(foundToken.isEmpty() || foundToken.get().isRevoked()){
+            throw new RuntimeException("Invalid token");
+        }
+
+        if(!Objects.equals(foundToken.get().getRefreshToken(), refreshTokenDTO.getRefreshToken())){
+            throw new RuntimeException("Refresh token does not match");
+        }
+
+        if(Instant.now().isAfter(foundToken.get().getRefreshExpirationDate())){
+            throw new RuntimeException("Refresh expired");
+        }
+
+        User user = this.getUserDetailsFromToken(token);
+        String newToken = jwtService.generateToken(user);
+        jwtService.revokeToken(token);
+
+        return newToken;
+    }
 }
