@@ -72,8 +72,8 @@ public class AuthController {
         }
 
         String token = authHeader.split("Bearer ")[1];
-        User user = userService.getUserDetailsFromToken(token);
-        String newToken = userService.refreshToken(token, refreshTokenDTO);
+        User user = userService.getUserDetailsFromRefreshToken(refreshTokenDTO.getRefreshToken());
+        String newToken = userService.refreshToken(token, refreshTokenDTO, user);
         Token createdToken = jwtService.addToken(newToken, user);
 
         LoginResponse loginResponse = LoginResponse.builder()

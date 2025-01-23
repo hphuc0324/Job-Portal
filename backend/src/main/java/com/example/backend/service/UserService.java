@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,12 +24,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     private final AuthenticationManager authenticationManager;
+
     private final JwtService jwtService;
     private final RoleService roleService;
-    private final TokenRepository tokenRepository;
+    private final TokenService tokenService;
 
     public String login(UserLoginDTO userLoginDTO) {
         String username = userLoginDTO.getEmail();
@@ -94,15 +98,35 @@ public class UserService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
+        if(user.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+
         return user.get();
     }
 
-    public String refreshToken(String token, RefreshTokenDTO refreshTokenDTO){
+    public User getUserDetailsFromRefreshToken(String refreshToken) {
+        Optional<Token> foundToken = tokenService.getTokenByRefreshToken(refreshToken);
+
+        if(foundToken.isEmpty()){
+            throw new RuntimeException("Refresh token not found");
+        }
+
+        Optional<User> user = userRepository.findByEmail(foundToken.get().getUser().getEmail());
+
+        if(user.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+
+        return user.get();
+    }
+
+    public String refreshToken(String token, RefreshTokenDTO refreshTokenDTO, User user){
         if(jwtService.validateToken(token)){
             throw new RuntimeException("Token still ok");
         }
 
-        Optional<Token> foundToken = tokenRepository.findByToken(token);
+        Optional<Token> foundToken = tokenService.getToken(token);
 
         if(foundToken.isEmpty() || foundToken.get().isRevoked()){
             throw new RuntimeException("Invalid token");
@@ -116,7 +140,6 @@ public class UserService {
             throw new RuntimeException("Refresh expired");
         }
 
-        User user = this.getUserDetailsFromToken(token);
         String newToken = jwtService.generateToken(user);
         jwtService.revokeToken(token);
 

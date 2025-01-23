@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private String apiPrefix;
 
     @Override
-    protected void doFilterInternal( HttpServletRequest request,  HttpServletResponse response,  FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (isBypassToken(request)) {
             filterChain.doFilter(request, response);
             return;
@@ -45,17 +45,20 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             String token = authHeader.split("Bearer ")[1];
 
+            if (!jwtService.validateToken(token)) {
+                throw new RuntimeException("Invalid JWT token");
+            }
+
             String email = jwtService.getEmail(token);
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = (User) userDetailsService.loadUserByUsername(email);
 
-                if (jwtService.validateToken(token)) {
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
-                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                }
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
 
                 filterChain.doFilter(request, response);
             }
@@ -72,7 +75,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/auth/login", apiPrefix), "POST"),
                 Pair.of(String.format("%s/auth/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/auth/refresh-token", apiPrefix), "POST")
-
         );
 
         for (Pair<String, String> pair : bypass) {
