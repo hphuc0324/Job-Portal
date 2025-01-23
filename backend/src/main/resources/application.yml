@@ -20,6 +20,15 @@ spring:
         format_sql: true
         default_schema: public
 
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          client-id: ${SPRING_OAUTH2_GOOGLE_CLIENT_ID}
+          client-secret: ${SPRING_OATH2_GOOGLE_CLIENT_SECRET}
+          redirect-url: http://localhost:3000/auth/google/callback
+          user-info-url: https://www.googleapis.com/oauth2/v3/userinfo
 
 
 api:
