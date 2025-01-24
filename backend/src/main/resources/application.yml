@@ -2,6 +2,11 @@ server:
   port: 8080
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/Job-Portal}
     username: postgres
@@ -35,6 +40,11 @@ api:
   prefix: api/v1
 
 jwt:
-  secret_key: ${SPRING_JWT_SECRET_KEY}
+  secret-key: ${SPRING_JWT_SECRET_KEY}
   expiration: 7200
   refresh-expiration: 604800
+
+cloudinary:
+  cloud-name: cloudinary-hphucc0324
+  api-key: ${SPRING_CLOUDINARY_API_KEY}
+  api-secret: ${SPRING_CLOUDINARY_API_SECRET}

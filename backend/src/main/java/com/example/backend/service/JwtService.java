@@ -21,7 +21,7 @@ import java.util.function.Function;
 public class JwtService {
     private final TokenRepository tokenRepository;
 
-    @Value("${jwt.secret_key}")
+    @Value("${jwt.secret-key}")
     private String secretKey;
 
     @Value("${jwt.expiration}")
