@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.dto.RefreshTokenDTO;
 import com.example.backend.dto.UserLoginDTO;
 import com.example.backend.dto.UserRegisterDTO;
+import com.example.backend.dto.UserUpdateDTO;
+import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.Role;
 import com.example.backend.model.Token;
 import com.example.backend.model.User;
@@ -20,6 +22,7 @@ import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,8 @@ public class UserService {
     private final JwtService jwtService;
     private final RoleService roleService;
     private final TokenService tokenService;
+
+    private final UserMapper userMapper;
 
     public String login(UserLoginDTO userLoginDTO) {
         String username = userLoginDTO.getEmail();
@@ -144,5 +149,24 @@ public class UserService {
         jwtService.revokeToken(token);
 
         return newToken;
+    }
+
+    public User updateUser(UUID id, UserUpdateDTO userUpdateDTO){
+        Optional<User> foundUser = userRepository.findById(id);
+
+        if(foundUser.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+
+        User user = foundUser.get();
+        String roleName = user.getRole().getRoleName();
+
+        if(Objects.equals(roleName, "applicant")){
+            userMapper.updateApplicant(userUpdateDTO, user);
+        }else if(Objects.equals(roleName, "employer")){
+            userMapper.updateEmployer(userUpdateDTO, user);
+        }
+
+        return user;
     }
 }

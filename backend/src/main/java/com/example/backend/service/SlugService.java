@@ -1,13 +1,14 @@
-package com.example.backend.util;
+package com.example.backend.service;
 
-import com.example.backend.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SlugUtils {
+public class SlugService {
     private final JobService jobService;
+    private final CategoryService categoryService;
+    private final LevelService levelService;
 
     public  String generateSlug(String input, String tableName){
         String baseSlug = input.toLowerCase()
@@ -27,9 +28,9 @@ public class SlugUtils {
 
     private boolean isSlugExists(String slug, String tableName){
         return switch (tableName) {
-            case "jobs" -> jobService.existsJobsBySlug(slug);
-            case "applications" -> true;
-            case "categories" -> true;
+            case "jobs" -> jobService.existsBySlug(slug);
+            case "levels" -> levelService.existsBySlug(slug);
+            case "categories" -> categoryService.existsBySlug(slug);
             default -> false;
         };
     }

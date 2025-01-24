@@ -1,15 +1,15 @@
 package com.example.backend.service;
 
-import com.example.backend.repository.JobRepository;
+import com.example.backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JobService {
-    private final JobRepository jobRepository;
+public class CategoryService {
+    private final CategoryRepository categoryRepository;
 
     public boolean existsBySlug(String slug){
-        return jobRepository.existsBySlug(slug);
+        return categoryRepository.existsBySlug(slug);
     }
 }
