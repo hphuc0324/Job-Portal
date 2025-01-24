@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.annotation.IsProfileOwner;
 import com.example.backend.dto.UserUpdateDTO;
 import com.example.backend.model.User;
 import com.example.backend.response.ResponseObject;
@@ -38,6 +39,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/profile/{id}/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @IsProfileOwner(idParam = "id")
     public ResponseEntity<ResponseObject> uploadAvatar(
             @PathVariable(value = "id") UUID id,
             @RequestPart("file") MultipartFile file){
