@@ -4,6 +4,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.RefreshTokenDTO;
 import com.example.backend.dto.UserLoginDTO;
 import com.example.backend.dto.UserRegisterDTO;
+import com.example.backend.exception.UnauthorizedAccessException;
 import com.example.backend.model.Token;
 import com.example.backend.model.User;
 import com.example.backend.response.LoginResponse;
@@ -14,6 +15,7 @@ import com.example.backend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +41,7 @@ public class AuthController {
                 ResponseObject.builder()
                         .message("Login successfully")
                         .data(loginResponse)
-                        .status("200 - OK")
+                        .status(HttpStatus.OK)
                         .build()
         );
     }
@@ -58,7 +60,7 @@ public class AuthController {
                 ResponseObject.builder()
                         .message("Register successfully")
                         .data(registerResponse)
-                        .status("200 - OK")
+                        .status(HttpStatus.OK)
                         .build()
         );
     }
@@ -68,7 +70,7 @@ public class AuthController {
     public ResponseEntity<ResponseObject> refresh(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO, HttpServletRequest request){
         String authHeader = request.getHeader("Authorization");
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedAccessException("Unauthorized");
         }
 
         String token = authHeader.split("Bearer ")[1];
@@ -85,7 +87,7 @@ public class AuthController {
                 ResponseObject.builder()
                         .message("Refresh successfully")
                         .data(loginResponse)
-                        .status("200 - OK")
+                        .status(HttpStatus.OK)
                         .build()
         );
     }

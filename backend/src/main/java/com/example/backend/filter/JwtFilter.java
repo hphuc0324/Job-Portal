@@ -1,8 +1,12 @@
 package com.example.backend.filter;
 
+import com.example.backend.exception.BadRequestException;
+import com.example.backend.exception.UnauthorizedAccessException;
 import com.example.backend.model.User;
+import com.example.backend.response.ResponseObject;
 import com.example.backend.service.JwtService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final ObjectMapper objectMapper;
 
     @Value("${api.prefix}")
     private String apiPrefix;
@@ -41,12 +48,12 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                throw new RuntimeException("Invalid JWT token");
+                throw new UnauthorizedAccessException("Invalid JWT token");
             }
             String token = authHeader.split("Bearer ")[1];
 
             if (!jwtService.validateToken(token)) {
-                throw new RuntimeException("Invalid JWT token");
+                throw new BadRequestException("Invalid JWT token");
             }
 
             String email = jwtService.getEmail(token);
@@ -63,7 +70,14 @@ public class JwtFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(objectMapper.writeValueAsString(
+                    ResponseObject.builder()
+                            .message(e.getMessage())
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .build()
+            ));
         }
 
     }

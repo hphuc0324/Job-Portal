@@ -2,12 +2,15 @@ package com.example.backend.controller;
 
 import com.example.backend.annotation.IsProfileOwner;
 import com.example.backend.dto.UserUpdateDTO;
+import com.example.backend.exception.BadRequestException;
+import com.example.backend.exception.DataNotFoundException;
 import com.example.backend.model.User;
 import com.example.backend.response.ResponseObject;
 import com.example.backend.service.CloudinaryService;
 import com.example.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +37,7 @@ public class UserController {
                 .builder()
                 .message("User updated successfully")
                 .data(user)
-                .status("200 - OK")
+                .status(HttpStatus.OK)
                 .build());
     }
 
@@ -44,13 +47,13 @@ public class UserController {
             @PathVariable(value = "id") UUID id,
             @RequestPart("file") MultipartFile file){
        if(file == null){
-           throw new RuntimeException("File is null");
+           throw new DataNotFoundException("File is null");
        }
 
        String contentType = file.getContentType();
 
        if(contentType == null || !contentType.startsWith("image/")){
-           throw new RuntimeException("File is not an image");
+           throw new BadRequestException("File is not an image");
        }
 
         Map result = cloudinaryService.upload(file);
@@ -64,7 +67,7 @@ public class UserController {
                 ResponseObject.builder()
                         .message("Upload avatar successfully")
                         .data(user)
-                        .status("200 - OK")
+                        .status(HttpStatus.OK)
                         .build()
         );
     }

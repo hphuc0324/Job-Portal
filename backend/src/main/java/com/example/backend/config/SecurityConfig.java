@@ -1,5 +1,6 @@
 package com.example.backend.config;
 
+import com.example.backend.exception.DataNotFoundException;
 import com.example.backend.filter.JwtFilter;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
@@ -31,7 +32,7 @@ public class SecurityConfig {
             Optional<User> foundUser = userRepository.findByEmail(email);
 
             if(foundUser.isEmpty()){
-                throw new RuntimeException("User not found");
+                throw new DataNotFoundException("User not found");
             }
 
             return foundUser.get();
