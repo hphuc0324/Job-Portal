@@ -10,6 +10,7 @@ import com.example.backend.service.CloudinaryService;
 import com.example.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,9 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
+
+    @Value("${cloudinary.user-avatar-folder}")
+    private String userAvatarFolder;
 
     @PatchMapping("/profile/{id}")
     public ResponseEntity<ResponseObject> updateProfile(
@@ -56,7 +60,7 @@ public class UserController {
            throw new BadRequestException("File is not an image");
        }
 
-        Map result = cloudinaryService.upload(file);
+        Map result = cloudinaryService.upload(file, userAvatarFolder);
         UserUpdateDTO userUpdateDTO = UserUpdateDTO.builder()
                 .avatarUrl((String) result.get("url"))
                 .build();

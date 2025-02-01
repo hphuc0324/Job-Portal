@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -39,7 +41,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ResponseObject> handleBadRequest(WrongCredentialsException e) {
+    public ResponseEntity<ResponseObject> handleBadRequest(BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseObject.builder()
                         .message(e.getMessage())
@@ -49,7 +51,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ResponseObject> handleEmailAlreadyExists(WrongCredentialsException e) {
+    public ResponseEntity<ResponseObject> handleEmailAlreadyExists(EmailAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseObject.builder()
                         .message(e.getMessage())
@@ -59,11 +61,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<ResponseObject> handleUnauthorized(WrongCredentialsException e) {
+    public ResponseEntity<ResponseObject> handleUnauthorized(UnauthorizedAccessException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 ResponseObject.builder()
                         .message(e.getMessage())
                         .status(HttpStatus.UNAUTHORIZED)
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ResponseObject> handleMissingServletRequestParameterException(MissingServletRequestPartException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ResponseObject.builder()
+                        .message("Missing " + e.getRequestPartName())
+                        .status(HttpStatus.BAD_REQUEST)
                         .build()
         );
     }

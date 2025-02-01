@@ -48,3 +48,5 @@ cloudinary:
   cloud-name: cloudinary-hphucc0324
   api-key: ${SPRING_CLOUDINARY_API_KEY}
   api-secret: ${SPRING_CLOUDINARY_API_SECRET}
+  cloudinary-folder: Job Portal
+  user-avatar-folder: /user-avatar
