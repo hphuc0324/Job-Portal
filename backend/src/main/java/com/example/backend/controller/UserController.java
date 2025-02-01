@@ -1,12 +1,14 @@
 package com.example.backend.controller;
 
 import com.example.backend.annotation.IsProfileOwner;
+import com.example.backend.dto.UserExperienceDTO;
 import com.example.backend.dto.UserUpdateDTO;
 import com.example.backend.exception.BadRequestException;
 import com.example.backend.exception.DataNotFoundException;
 import com.example.backend.model.User;
 import com.example.backend.response.ResponseObject;
 import com.example.backend.service.CloudinaryService;
+import com.example.backend.service.ExperienceService;
 import com.example.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,11 +29,13 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
+    private final ExperienceService experienceService;
 
     @Value("${cloudinary.user-avatar-folder}")
     private String userAvatarFolder;
 
     @PatchMapping("/profile/{id}")
+    @IsProfileOwner(idParam = "id")
     public ResponseEntity<ResponseObject> updateProfile(
             @PathVariable(value = "id") UUID id,
             @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
@@ -72,6 +77,24 @@ public class UserController {
                         .message("Upload avatar successfully")
                         .data(user)
                         .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
+    @PostMapping(path = "/profile/{id}/experiences")
+    @IsProfileOwner(idParam = "id")
+    public ResponseEntity<ResponseObject> updateExperiences(
+            @PathVariable(value = "id") UUID id,
+            @Valid @RequestBody List<UserExperienceDTO> userExperienceDTOs
+            ){
+
+        experienceService.processExperience(userExperienceDTOs, id);
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Update experiences successfully")
+                        .status(HttpStatus.OK)
+                        .data(userExperienceDTOs)
                         .build()
         );
     }

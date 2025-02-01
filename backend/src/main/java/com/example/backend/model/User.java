@@ -102,4 +102,9 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updatedAt = Instant.now();
+    }
 }

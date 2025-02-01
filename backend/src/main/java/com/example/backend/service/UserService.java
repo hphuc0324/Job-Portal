@@ -173,4 +173,14 @@ public class UserService {
 
         return user;
     }
+
+    public User findById(UUID id){
+        Optional<User> foundUser = userRepository.findById(id);
+
+        if(foundUser.isEmpty()){
+            throw new DataNotFoundException("User not found");
+        }
+
+        return foundUser.get();
+    }
 }
