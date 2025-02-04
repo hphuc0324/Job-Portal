@@ -19,7 +19,7 @@ function RegisterPage() {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="w-full min-h-16 max-w-screen-md  grid grid-cols-12 border-2 border-black rounded-xl ">
-        <div className="col-span-6 min-h-16 px-8 ">
+        <div className="col-span-12 md:col-span-6 min-h-16 px-8 ">
           <Link to="/" className="font-bold text-center block">
             JOB PORTAL
           </Link>
@@ -34,7 +34,7 @@ function RegisterPage() {
             </p>
           </div>
         </div>
-        <div className="col-span-6 rounded-r-inherit ">
+        <div className="hidden md:block col-span-6 rounded-r-inherit ">
           <AutoPlayCarousel slides={renderImages()} />
         </div>
       </div>
