@@ -1,3 +1,5 @@
+import LoginPage from '@/pages/auth-pages/login';
+import RegisterPage from '@/pages/auth-pages/register';
 import { Outlet } from 'react-router-dom';
 
 export const publicRoutes = [
@@ -30,6 +32,19 @@ export const publicRoutes = [
             element: <>profile</>,
           },
         ],
+      },
+    ],
+  },
+  {
+    path: '/auth',
+    children: [
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'register',
+        element: <RegisterPage />,
       },
     ],
   },
