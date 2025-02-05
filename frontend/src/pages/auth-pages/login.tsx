@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 
 import LoginForm from '@/components/forms/login-form';
 import AutoPlayCarousel from '@/components/carousels/carousel';
 import { Button } from '@/components/ui/button';
 import { FcGoogle } from 'react-icons/fc';
+import { LoginFormSchemaType } from '@/types/schemas/login';
+import { useContext } from 'react';
+import { AuthContext } from '@/providers/AuthProvider';
 
 const images = [
   'https://t4.ftcdn.net/jpg/02/65/65/01/360_F_265650104_2K1hVhIAuZfSVuo3J1eXQ6PTn3S1Sd0K.jpg',
@@ -12,10 +15,24 @@ const images = [
 ];
 
 function LoginPage() {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const renderImages = () => {
     return images.map((image, index) => (
       <img key={index} src={image} alt="carousel image" className="w-full h-full rounded-l-xl" />
     ));
+  };
+
+  const handleSubmit = async (values: LoginFormSchemaType) => {
+    const success = await auth?.login(values);
+
+    if (success) {
+      const search = new URLSearchParams(location.search);
+      const redirectUrl = search.get('redirect');
+
+      navigate(redirectUrl ? decodeURIComponent(redirectUrl) : '/');
+    }
   };
 
   return (
@@ -31,7 +48,8 @@ function LoginPage() {
           </Link>
           <div className="mt-12">
             <p className="font-bold text-2xl text-center">WELCOME BACK</p>
-            <LoginForm onSubmit={() => {}} isLoading={false} />
+            <p className="text-red-500">{auth?.error?.message}</p>
+            <LoginForm onSubmit={handleSubmit} isLoading={false} />
             <p className="text-center text-sm my-2">
               You can register for new accout here!{' '}
               <Link to="/auth/register" className="font-bold hover:underline">

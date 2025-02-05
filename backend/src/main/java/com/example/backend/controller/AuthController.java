@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 
 import com.example.backend.dto.RefreshTokenDTO;
+import com.example.backend.dto.UserDTO;
 import com.example.backend.dto.UserLoginDTO;
 import com.example.backend.dto.UserRegisterDTO;
 import com.example.backend.exception.UnauthorizedAccessException;
@@ -35,6 +36,12 @@ public class AuthController {
         LoginResponse loginResponse = LoginResponse.builder()
                 .token(createdToken.getToken())
                 .refreshToken(createdToken.getRefreshToken())
+                .user(UserDTO.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .avatarUrl(user.getAvatarUrl())
+                        .build())
                 .build();
 
         return ResponseEntity.ok().body(

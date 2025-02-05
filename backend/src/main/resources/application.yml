@@ -35,6 +35,8 @@ security:
           redirect-url: http://localhost:3000/auth/google/callback
           user-info-url: https://www.googleapis.com/oauth2/v3/userinfo
 
+cors:
+  allowed-origins: ${SPRING_CORS_ALLOWED_ORIGINS}
 
 api:
   prefix: api/v1
