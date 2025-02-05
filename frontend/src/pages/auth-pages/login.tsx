@@ -1,4 +1,4 @@
-import { Link, redirect, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import LoginForm from '@/components/forms/login-form';
 import AutoPlayCarousel from '@/components/carousels/carousel';
@@ -7,6 +7,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { LoginFormSchemaType } from '@/types/schemas/login';
 import { useContext } from 'react';
 import { AuthContext } from '@/providers/AuthProvider';
+import { useState } from 'react';
 
 const images = [
   'https://t4.ftcdn.net/jpg/02/65/65/01/360_F_265650104_2K1hVhIAuZfSVuo3J1eXQ6PTn3S1Sd0K.jpg',
@@ -17,6 +18,7 @@ const images = [
 function LoginPage() {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const renderImages = () => {
     return images.map((image, index) => (
@@ -25,6 +27,7 @@ function LoginPage() {
   };
 
   const handleSubmit = async (values: LoginFormSchemaType) => {
+    setIsLoading(true);
     const success = await auth?.login(values);
 
     if (success) {
@@ -33,6 +36,8 @@ function LoginPage() {
 
       navigate(redirectUrl ? decodeURIComponent(redirectUrl) : '/');
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -49,7 +54,7 @@ function LoginPage() {
           <div className="mt-12">
             <p className="font-bold text-2xl text-center">WELCOME BACK</p>
             <p className="text-red-500">{auth?.error?.message}</p>
-            <LoginForm onSubmit={handleSubmit} isLoading={false} />
+            <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
             <p className="text-center text-sm my-2">
               You can register for new accout here!{' '}
               <Link to="/auth/register" className="font-bold hover:underline">
@@ -62,7 +67,7 @@ function LoginPage() {
             <span className="px-2 bg-white text-gray-600">or</span>
           </h2>
 
-          <Button variant="outline" className="shadow-md my-4">
+          <Button variant="outline" className="shadow-md my-4" disabled={isLoading}>
             <FcGoogle />
             Continue with Google
           </Button>

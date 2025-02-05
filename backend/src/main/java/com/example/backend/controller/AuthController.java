@@ -28,7 +28,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseObject> login(@Valid @RequestBody UserLoginDTO userLoginDTO){
+    public ResponseEntity<ResponseObject> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         String token = userService.login(userLoginDTO);
         User user = userService.getUserDetailsFromToken(token);
         Token createdToken = jwtService.addToken(token, user);
@@ -41,6 +41,7 @@ public class AuthController {
                         .name(user.getName())
                         .email(user.getEmail())
                         .avatarUrl(user.getAvatarUrl())
+                        .role(user.getRole().getRoleName())
                         .build())
                 .build();
 
@@ -54,13 +55,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseObject> register(@Valid @RequestBody UserRegisterDTO userRegisterDTO){
+    public ResponseEntity<ResponseObject> register(@Valid @RequestBody UserRegisterDTO userRegisterDTO) {
         User user = userService.register(userRegisterDTO);
 
         RegisterResponse registerResponse = RegisterResponse.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .role(user.getRole().getRoleName())
+                .user(
+                        UserDTO.builder()
+                                .id(user.getId())
+                                .name(user.getName())
+                                .email(user.getEmail())
+                                .avatarUrl(user.getAvatarUrl())
+                                .role(user.getRole().getRoleName())
+                                .build()
+                )
                 .build();
 
         return ResponseEntity.ok().body(
@@ -74,9 +81,9 @@ public class AuthController {
 
 
     @PostMapping("refresh-token")
-    public ResponseEntity<ResponseObject> refresh(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO, HttpServletRequest request){
+    public ResponseEntity<ResponseObject> refresh(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO, HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new UnauthorizedAccessException("Unauthorized");
         }
 

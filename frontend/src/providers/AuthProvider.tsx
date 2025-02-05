@@ -1,5 +1,6 @@
 import authApi from '@/apis/auth-api';
 import { LoginFormSchemaType } from '@/types/schemas/login';
+import { RegisterFormSchemaType } from '@/types/schemas/register';
 import { AxiosError } from 'axios';
 import { createContext, ReactNode, useState } from 'react';
 
@@ -19,6 +20,7 @@ interface AuthContextType {
   user: User | null;
   error: AuthError | null;
   login: (data: LoginFormSchemaType) => void;
+  register: (data: RegisterFormSchemaType) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -51,7 +53,24 @@ function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return <AuthContext.Provider value={{ user, login, error }}>{children}</AuthContext.Provider>;
+  const register = async (data: RegisterFormSchemaType) => {
+    try {
+      await authApi.register(data);
+
+      setError(null);
+
+      return true;
+    } catch (error: AxiosError | any) {
+      setError({ status: error.status, message: '' });
+      if (error.response) {
+        setError((prev) => ({ status: prev?.status ?? null, message: error.response.data?.message }));
+      }
+
+      return false;
+    }
+  };
+
+  return <AuthContext.Provider value={{ user, login, register, error }}>{children}</AuthContext.Provider>;
 }
 
 export default AuthProvider;

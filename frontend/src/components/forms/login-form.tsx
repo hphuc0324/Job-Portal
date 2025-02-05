@@ -5,6 +5,7 @@ import { Form } from '../ui/form';
 import InputField from '../form-input/input-field';
 import PasswordField from '../form-input/password-field';
 import { Button } from '../ui/button';
+import { Loader2 } from 'lucide-react';
 
 interface LoginFormProps {
   onSubmit: (values: LoginFormSchemaType) => void;
@@ -26,7 +27,10 @@ function LoginForm(props: LoginFormProps) {
         <InputField control={form.control} name="email" label="Email" placeholder="Enter your email" />
         <PasswordField control={form.control} name="password" label="Password" placeholder="Enter your password" />
 
-        <Button className="w-full mt-4">Continue</Button>
+        <Button className="w-full mt-4" disabled={props.isLoading}>
+          {props.isLoading && <Loader2 className="animate-spin" />}
+          Continue
+        </Button>
       </form>
     </Form>
   );
