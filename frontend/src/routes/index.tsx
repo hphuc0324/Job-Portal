@@ -1,5 +1,6 @@
 import LoginPage from '@/pages/auth-pages/login';
 import RegisterPage from '@/pages/auth-pages/register';
+import SocialCallback from '@/pages/auth-pages/social-callback';
 import { Outlet } from 'react-router-dom';
 
 export const publicRoutes = [
@@ -45,6 +46,10 @@ export const publicRoutes = [
       {
         path: 'register',
         element: <RegisterPage />,
+      },
+      {
+        path: 'google/callback',
+        element: <SocialCallback />,
       },
     ],
   },

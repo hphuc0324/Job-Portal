@@ -30,9 +30,10 @@ security:
     client:
       registration:
         google:
+          google-auth-url: https://accounts.google.com/o/oauth2/auth
           client-id: ${SPRING_OAUTH2_GOOGLE_CLIENT_ID}
           client-secret: ${SPRING_OATH2_GOOGLE_CLIENT_SECRET}
-          redirect-url: http://localhost:3000/auth/google/callback
+          redirect-url: http://localhost:5173/auth/google/callback
           user-info-url: https://www.googleapis.com/oauth2/v3/userinfo
 
 cors:

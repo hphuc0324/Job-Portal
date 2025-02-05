@@ -11,6 +11,7 @@ import com.example.backend.model.User;
 import com.example.backend.response.LoginResponse;
 import com.example.backend.response.RegisterResponse;
 import com.example.backend.response.ResponseObject;
+import com.example.backend.service.AuthService;
 import com.example.backend.service.JwtService;
 import com.example.backend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final UserService userService;
     private final JwtService jwtService;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<ResponseObject> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
@@ -80,7 +82,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("refresh-token")
+    @PostMapping("/refresh-token")
     public ResponseEntity<ResponseObject> refresh(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO, HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -101,6 +103,32 @@ public class AuthController {
                 ResponseObject.builder()
                         .message("Refresh successfully")
                         .data(loginResponse)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
+    @GetMapping("/social-login")
+    public ResponseEntity<ResponseObject> socialLogin(@RequestParam("login_type") String loginType) {
+        String url = authService.generateAuthUrl(loginType);
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Social login url created successfully")
+                        .data(url)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
+    @GetMapping("/social/callback")
+    public ResponseEntity<ResponseObject> socialCallback(@RequestParam String code, @RequestParam("login_type") String loginType) {
+
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Social login successfully")
+                        .data(code)
                         .status(HttpStatus.OK)
                         .build()
         );
