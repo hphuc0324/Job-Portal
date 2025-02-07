@@ -13,6 +13,7 @@ import com.example.backend.response.RegisterResponse;
 import com.example.backend.response.ResponseObject;
 import com.example.backend.service.AuthService;
 import com.example.backend.service.JwtService;
+import com.example.backend.service.TokenService;
 import com.example.backend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -21,6 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Map;
+
 @RestController
 @RequestMapping("${api.prefix}/auth")
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class AuthController {
     private final UserService userService;
     private final JwtService jwtService;
     private final AuthService authService;
+    private final TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity<ResponseObject> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
@@ -109,8 +114,8 @@ public class AuthController {
     }
 
     @GetMapping("/social-login")
-    public ResponseEntity<ResponseObject> socialLogin(@RequestParam("login_type") String loginType) {
-        String url = authService.generateAuthUrl(loginType);
+    public ResponseEntity<ResponseObject> socialLogin(@RequestParam("login_type") String loginType, @RequestParam("role") String role) {
+        String url = authService.generateAuthUrl(loginType, role);
 
         return ResponseEntity.ok().body(
                 ResponseObject.builder()
@@ -122,13 +127,43 @@ public class AuthController {
     }
 
     @GetMapping("/social/callback")
-    public ResponseEntity<ResponseObject> socialCallback(@RequestParam String code, @RequestParam("login_type") String loginType) {
+    public ResponseEntity<ResponseObject> socialCallback(@RequestParam String code, @RequestParam("login_type") String loginType, @RequestParam String role) throws IOException {
 
+        Map<String, String> userInfo = authService.fetchUserInfo(loginType, code);
+        if(authService.isNewSocialLogin(userInfo.get("email"))){
+            if(loginType.equals("google")){
+                UserRegisterDTO userRegisterDTO = UserRegisterDTO.builder()
+                        .name(userInfo.get("name"))
+                        .email(userInfo.get("email"))
+                        .password("")
+                        .avatarUrl(userInfo.get("picture"))
+                        .googleAccountId(userInfo.get("sub"))
+                        .role(role)
+                        .build();
+                userService.register(userRegisterDTO);
+            }
+        }
+
+        String token = authService.authenticateSocialUser(userInfo.get("email"));
+        User user = userService.getUserDetailsFromToken(token);
+        Token createdToken = jwtService.addToken(token, user);
+
+        LoginResponse loginResponse = LoginResponse.builder()
+                .token(createdToken.getToken())
+                .refreshToken(createdToken.getRefreshToken())
+                .user(UserDTO.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .avatarUrl(user.getAvatarUrl())
+                        .role(user.getRole().getRoleName())
+                        .build())
+                .build();
 
         return ResponseEntity.ok().body(
                 ResponseObject.builder()
                         .message("Social login successfully")
-                        .data(code)
+                        .data(loginResponse)
                         .status(HttpStatus.OK)
                         .build()
         );

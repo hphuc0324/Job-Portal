@@ -89,6 +89,7 @@ public class UserService {
                 .name(userRegisterDTO.getName())
                 .email(userRegisterDTO.getEmail())
                 .password(passwordEncoder.encode(userRegisterDTO.getPassword()))
+                .avatarUrl(userRegisterDTO.getAvatarUrl())
                 .role(role.get())
                 .status("active")
                 .createdAt(Instant.now())
@@ -98,6 +99,7 @@ public class UserService {
 
         return userRepository.save(createdUser);
     }
+
 
     public User getUserDetailsFromToken(String token) {
         String email = jwtService.getEmail(token);
@@ -184,4 +186,6 @@ public class UserService {
 
         return foundUser.get();
     }
+
+
 }

@@ -1,9 +1,12 @@
 package com.example.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class UserRegisterDTO {
 
     @Email(message = "Invalid email")
@@ -18,4 +21,9 @@ public class UserRegisterDTO {
 
     @NotNull(message = "Invalid role")
     private String role;
+
+    @JsonProperty("avatar_url")
+    private String avatarUrl;
+
+    private String googleAccountId;
 }
