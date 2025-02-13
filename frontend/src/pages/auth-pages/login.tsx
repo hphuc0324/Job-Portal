@@ -5,9 +5,10 @@ import AutoPlayCarousel from '@/components/carousels/carousel';
 import { Button } from '@/components/ui/button';
 import { FcGoogle } from 'react-icons/fc';
 import { LoginFormSchemaType } from '@/types/schemas/login';
-import { useContext } from 'react';
-import { AuthContext } from '@/providers/AuthProvider';
+
 import { useState } from 'react';
+import authApi from '@/apis/auth-api';
+import useAuth from '@/hooks/use-auth';
 
 const images = [
   'https://t4.ftcdn.net/jpg/02/65/65/01/360_F_265650104_2K1hVhIAuZfSVuo3J1eXQ6PTn3S1Sd0K.jpg',
@@ -16,7 +17,7 @@ const images = [
 ];
 
 function LoginPage() {
-  const auth = useContext(AuthContext);
+  const auth = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,6 +39,16 @@ function LoginPage() {
     }
 
     setIsLoading(false);
+  };
+
+  const handleSocialLogin = async (loginType: 'google' | 'github') => {
+    try {
+      const res = await authApi.socialLoginUrl(loginType, null);
+
+      window.location.replace(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -67,7 +78,12 @@ function LoginPage() {
             <span className="px-2 bg-white text-gray-600">or</span>
           </h2>
 
-          <Button variant="outline" className="shadow-md my-4" disabled={isLoading}>
+          <Button
+            variant="outline"
+            onClick={() => handleSocialLogin('google')}
+            className="shadow-md my-4"
+            disabled={isLoading}
+          >
             <FcGoogle />
             Continue with Google
           </Button>

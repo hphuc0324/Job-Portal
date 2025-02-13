@@ -5,6 +5,7 @@ import com.example.backend.dto.RefreshTokenDTO;
 import com.example.backend.dto.UserDTO;
 import com.example.backend.dto.UserLoginDTO;
 import com.example.backend.dto.UserRegisterDTO;
+import com.example.backend.exception.BadRequestException;
 import com.example.backend.exception.UnauthorizedAccessException;
 import com.example.backend.model.Token;
 import com.example.backend.model.User;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("${api.prefix}/auth")
@@ -114,7 +116,7 @@ public class AuthController {
     }
 
     @GetMapping("/social-login")
-    public ResponseEntity<ResponseObject> socialLogin(@RequestParam("login_type") String loginType, @RequestParam("role") String role) {
+    public ResponseEntity<ResponseObject> socialLogin(@RequestParam("login_type") String loginType, @RequestParam(value = "role", required = false) String role) {
         String url = authService.generateAuthUrl(loginType, role);
 
         return ResponseEntity.ok().body(
@@ -127,10 +129,14 @@ public class AuthController {
     }
 
     @GetMapping("/social/callback")
-    public ResponseEntity<ResponseObject> socialCallback(@RequestParam String code, @RequestParam("login_type") String loginType, @RequestParam String role) throws IOException {
+    public ResponseEntity<ResponseObject> socialCallback(@RequestParam String code, @RequestParam(value = "login_type") String loginType, @RequestParam(required = false) String role) throws IOException {
 
         Map<String, String> userInfo = authService.fetchUserInfo(loginType, code);
         if(authService.isNewSocialLogin(userInfo.get("email"))){
+            if(role.isEmpty()){
+                throw new UnauthorizedAccessException("Unauthorized");
+            }
+
             if(loginType.equals("google")){
                 UserRegisterDTO userRegisterDTO = UserRegisterDTO.builder()
                         .name(userInfo.get("name"))
@@ -141,6 +147,11 @@ public class AuthController {
                         .role(role)
                         .build();
                 userService.register(userRegisterDTO);
+            }
+        } else{
+            if(!Objects.equals(role, "null")){
+                System.out.println(role);
+                throw new BadRequestException("Email already in use");
             }
         }
 

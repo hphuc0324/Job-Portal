@@ -72,8 +72,7 @@ public class AuthService {
                         .queryParam("scope", "email profile")
                         .queryParam("access_type", "offline")
                         .queryParam("response_type", "code")
-                        .queryParam("state", UUID.randomUUID().toString())
-                        .queryParam("role", role)
+                        .queryParam("state", role)
                         .toUriString();
             default:
                 return null;

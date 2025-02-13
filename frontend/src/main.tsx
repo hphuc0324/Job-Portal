@@ -6,10 +6,8 @@ import AuthProvider from './providers/AuthProvider.tsx';
 import { Toaster } from './components/ui/toaster.tsx';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <AuthProvider>
-      <App />
-      <Toaster />
-    </AuthProvider>
-  </StrictMode>,
+  <AuthProvider>
+    <App />
+    <Toaster />
+  </AuthProvider>,
 );

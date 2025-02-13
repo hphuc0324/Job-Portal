@@ -21,6 +21,7 @@ interface AuthContextType {
   error: AuthError | null;
   login: (data: LoginFormSchemaType) => void;
   register: (data: RegisterFormSchemaType) => void;
+  socialCallback: (code: string, loginType: 'google' | 'github', role: string | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -70,7 +71,33 @@ function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return <AuthContext.Provider value={{ user, login, register, error }}>{children}</AuthContext.Provider>;
+  const socialCallback = async (code: string, loginType: 'google' | 'github', role: string | null) => {
+    try {
+      const res = await authApi.socialCallback(code, loginType, role);
+
+      const result = res.data;
+
+      setUser(result.data.user);
+      setError(null);
+
+      localStorage.setItem('user', JSON.stringify(result.data.user));
+      localStorage.setItem('token', result.data.token);
+      localStorage.setItem('refreshToken', result.data['refresh-token']);
+
+      return true;
+    } catch (error: AxiosError | any) {
+      setError({ status: error.status, message: '' });
+      if (error.response) {
+        setError((prev) => ({ status: prev?.status ?? null, message: error.response.data?.message }));
+      }
+
+      return false;
+    }
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, register, error, socialCallback }}>{children}</AuthContext.Provider>
+  );
 }
 
 export default AuthProvider;

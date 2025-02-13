@@ -13,12 +13,12 @@ const authApi = {
     return axiosClient.post(`${baseURL}/register`, data);
   },
 
-  socialLoginUrl: (loginType: 'google' | 'github') => {
-    return axiosClient.get(`${baseURL}/social-login?login_type=${loginType}`);
+  socialLoginUrl: (loginType: 'google' | 'github', role: string | null) => {
+    return axiosClient.get(`${baseURL}/social-login?login_type=${loginType}&role=${role}`);
   },
 
-  socialCallback: (code: string, loginType: 'google' | 'githube') => {
-    return axiosClient.get(`${baseURL}/social/callback?code=${code}&login_type=${loginType}`);
+  socialCallback: (code: string, loginType: 'google' | 'github', role: string | null) => {
+    return axiosClient.get(`${baseURL}/social/callback?code=${code}&login_type=${loginType}&role=${role}`);
   },
 };
 

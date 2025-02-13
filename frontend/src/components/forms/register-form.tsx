@@ -12,9 +12,11 @@ import InputField from '../form-input/input-field';
 import PasswordField from '../form-input/password-field';
 import { RegisterFormSchema, RegisterFormSchemaType, Roles } from '@/types/schemas/register';
 import { cn } from '@/lib/utils';
+import { FcGoogle } from 'react-icons/fc';
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterFormSchemaType) => void;
+  onSocialRegister: (loginType: 'google' | 'github', role: string | null) => void;
   isLoading: boolean;
 }
 
@@ -37,6 +39,10 @@ function RegisterForm(props: RegisterFormProps) {
       shouldValidate: true,
       shouldDirty: true,
     });
+  };
+
+  const handleSocialRegister = async (loginType: 'google' | 'github') => {
+    props.onSocialRegister(loginType, form.getValues('role'));
   };
 
   return (
@@ -67,7 +73,20 @@ function RegisterForm(props: RegisterFormProps) {
           </Button>
         </div>
 
-        <div className="w-full h-[1px] bg-black my-4"></div>
+        <div>
+          <Button
+            variant="outline"
+            className="shadow-md w-full"
+            disabled={props.isLoading}
+            type="button"
+            onClick={() => handleSocialRegister('google')}
+          >
+            <FcGoogle />
+            Register with Google account
+          </Button>
+        </div>
+
+        <div className="w-full h-[1px] bg-black my-2"></div>
 
         <InputField control={form.control} label="Email" placeholder="Email address" name="email" />
         <InputField control={form.control} label="Compnay/Candidate name" placeholder="Name" name="name" />
