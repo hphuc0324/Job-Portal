@@ -1,4 +1,5 @@
 import LoginPage from '@/pages/auth-pages/login';
+import ProfilePage from '@/pages/personal-page/profile';
 import RegisterPage from '@/pages/auth-pages/register';
 import SocialCallback from '@/pages/auth-pages/social-callback';
 import { Outlet } from 'react-router-dom';
@@ -52,6 +53,10 @@ export const publicRoutes = [
         element: <SocialCallback />,
       },
     ],
+  },
+  {
+    path: '/profile/:id',
+    element: <ProfilePage />,
   },
 ];
 
