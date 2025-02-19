@@ -16,7 +16,7 @@ export interface Experience {
 
 function UserExperience({ experience }: UserExperienceProps) {
   return (
-    <div className="flex gap-1">
+    <div className="flex flex-1 gap-1">
       <CompanyAvatar />
 
       <div className="flex flex-col justify-between flex-1">

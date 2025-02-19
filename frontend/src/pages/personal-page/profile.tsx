@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useParams } from 'react-router-dom';
 import { BriefcaseBusiness, Building2, Calendar } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { Dot } from 'lucide-react';
 import { X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CompanyAvatar from '@/components/company-avatar';
@@ -11,6 +10,8 @@ import JobList from '@/components/job-list';
 import { Key, useState } from 'react';
 import EditableSection from '@/components/editable-section';
 import UserExperience, { Experience } from '@/components/user-experience';
+import { Pencil, Plus } from 'lucide-react';
+import UserExperienceSection from '@/components/user-experience-section';
 
 const job: Job = {
   title: 'Software Engineer',
@@ -31,9 +32,8 @@ const job: Job = {
 const experience: Experience = {
   role: 'Developer',
   startDate: new Date('2020-09-09'),
-  endDate: new Date(),
   isCurrentlyWorking: true,
-  company: 'Google',
+  company: 'google',
   location: 'Vietnam',
 };
 
@@ -98,7 +98,7 @@ function ProfilePage() {
     about:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam, voluptate',
     skills: ['javascript', 'html', 'css'],
-    experience: 'Google',
+    experience: [experience, experience],
   });
 
   return (
@@ -205,10 +205,7 @@ function ProfilePage() {
         <Separator className="my-8" />
 
         {/* Experience */}
-        <div className="space-y-4">
-          <h2 className="font-bold text-[24px] my-1">Experience</h2>
-          <UserExperience experience={experience} />
-        </div>
+        <UserExperienceSection experiences={data.experience} />
       </div>
     </div>
   );
