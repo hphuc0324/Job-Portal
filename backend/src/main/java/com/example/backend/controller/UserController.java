@@ -40,6 +40,8 @@ public class UserController {
             @PathVariable(value = "id") UUID id,
             @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
 
+        System.out.println(userUpdateDTO);
+
         User user = userService.updateUser(id, userUpdateDTO);
 
         return ResponseEntity.ok().body(ResponseObject

@@ -174,7 +174,8 @@ public class UserService {
             userMapper.updateEmployer(userUpdateDTO, user);
         }
 
-        return user;
+
+        return userRepository.save(user);
     }
 
     public User findById(UUID id){

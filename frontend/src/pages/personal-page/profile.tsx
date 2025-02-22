@@ -90,16 +90,16 @@ const SkillsSection = ({ tempValue, setTempValue }: any) => {
         return;
       }
       addSkill();
-      setNewSkill(''); // Clear input after adding skill
+      setNewSkill('');
     }
   };
 
   const addSkill = () => {
     if (tempValue.skills.includes(newSkill.trim())) {
-      return; // Avoid adding duplicate skill
+      return;
     }
 
-    setTempValue({ ...tempValue, skills: [...tempValue.skills, newSkill.trim()] }); // Update global state
+    setTempValue({ ...tempValue, skills: [...tempValue.skills, newSkill.trim()] });
   };
 
   return (
@@ -116,7 +116,7 @@ const SkillsSection = ({ tempValue, setTempValue }: any) => {
               className="rounded-[50%] p-0"
               onClick={() => {
                 const updatedSkills = tempValue.skills.filter((s: string) => s !== skill);
-                setTempValue({ ...tempValue, skills: updatedSkills }); // Remove skill globally
+                setTempValue({ ...tempValue, skills: updatedSkills });
               }}
             >
               <X size="16px" />
@@ -150,9 +150,16 @@ function ProfilePage() {
   });
   const { toast } = useToast();
 
-  const handleUpdateProfile = async (data: object) => {
+  const handleUpdateProfile = async (data: any) => {
     try {
-      const res = await userApi.updateProfile(data, '69ef218b-1f26-4193-a6f6-9e45e9170b14');
+      const submitData = {
+        ...data,
+      };
+      if (data.skills) {
+        submitData.skills = data.skills.toString();
+      }
+
+      const res = await userApi.updateProfile(submitData, '69ef218b-1f26-4193-a6f6-9e45e9170b14');
 
       toast({
         title: 'Update profile successfully',
