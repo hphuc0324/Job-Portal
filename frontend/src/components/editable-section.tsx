@@ -4,7 +4,7 @@ import { Pencil, Check, X } from 'lucide-react';
 interface EditableSectionProps {
   renderViewing: () => ReactNode;
   renderEditing: (tempValue: any, setTempValue: React.Dispatch<any>) => ReactNode;
-  handleSave: () => void;
+  handleSave: (data: object) => void;
   handleCancel: () => void;
   handleEdit: () => void;
   isEditing: boolean;
@@ -35,7 +35,7 @@ function EditableSection({
       <div className="absolute right-0 top-0">
         {isEditing ? (
           <div className="flex items-center gap-1 ">
-            <button onClick={handleSave}>
+            <button onClick={() => handleSave(tempValue)}>
               <Check className="text-green-500 w-5 h-5" />
             </button>
             <button onClick={handleCancel}>

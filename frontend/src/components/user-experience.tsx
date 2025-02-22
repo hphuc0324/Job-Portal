@@ -1,5 +1,5 @@
-import CompanyAvatar from './company-avatar';
 import { Dot } from 'lucide-react';
+import UserAvatar from './user-avatar';
 
 interface UserExperienceProps {
   experience: Experience;
@@ -17,7 +17,7 @@ export interface Experience {
 function UserExperience({ experience }: UserExperienceProps) {
   return (
     <div className="flex flex-1 gap-1">
-      <CompanyAvatar />
+      <UserAvatar />
 
       <div className="flex flex-col justify-between flex-1">
         <h3 className="font-bold">{experience.role}</h3>

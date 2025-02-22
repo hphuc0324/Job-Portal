@@ -1,17 +1,21 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useParams } from 'react-router-dom';
 import { BriefcaseBusiness, Building2, Calendar } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CompanyAvatar from '@/components/company-avatar';
-import JobCard, { Job } from '@/components/job-card';
+import UserAvatar from '@/components/user-avatar';
+import { Job } from '@/components/job-card';
 import JobList from '@/components/job-list';
-import { Key, useState } from 'react';
+import { useState } from 'react';
 import EditableSection from '@/components/editable-section';
-import UserExperience, { Experience } from '@/components/user-experience';
-import { Pencil, Plus } from 'lucide-react';
+import { Experience } from '@/components/user-experience';
 import UserExperienceSection from '@/components/user-experience-section';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { AxiosError } from 'axios';
+import userApi from '@/apis/user-api';
+import { useToast } from '@/hooks/use-toast';
+import { title } from 'process';
 
 const job: Job = {
   title: 'Software Engineer',
@@ -35,6 +39,46 @@ const experience: Experience = {
   isCurrentlyWorking: true,
   company: 'google',
   location: 'Vietnam',
+};
+
+const InfoSection = ({ tempValue, setTempValue }: any) => {
+  return (
+    <div className="grid grid-cols-3 gap-3">
+      <div>
+        <Label htmlFor="job">Job</Label>
+        <Input
+          id="job"
+          placeholder="Job title"
+          value={tempValue.job}
+          onChange={(e) => setTempValue({ ...tempValue, job: e.target.value })}
+          className="border-solid border-black border-[1px] "
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="location">Location</Label>
+        <Input
+          id="location"
+          placeholder="Location"
+          value={tempValue.location}
+          onChange={(e) => setTempValue({ ...tempValue, location: e.target.value })}
+          className="border-solid border-black border-[1px] "
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="yearExperience">Experience</Label>
+        <Input
+          id="yearExperience"
+          placeholder="Year of experience"
+          value={tempValue.yearExperience}
+          type="number"
+          onChange={(e) => setTempValue({ ...tempValue, yearExperience: e.target.value })}
+          className="border-solid border-black border-[1px] "
+        />
+      </div>
+    </div>
+  );
 };
 
 const SkillsSection = ({ tempValue, setTempValue }: any) => {
@@ -95,43 +139,73 @@ function ProfilePage() {
   const { id } = useParams();
   const [editing, setEditing] = useState<string | null>(null);
   const [data, setData] = useState({
+    job: 'Developer',
+    location: 'Vietnam',
+    yearExperience: 5,
     about:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam, voluptate',
     skills: ['javascript', 'html', 'css'],
     experience: [experience, experience],
+    role: 'applicant',
   });
+  const { toast } = useToast();
+
+  const handleUpdateProfile = async (data: object) => {
+    try {
+      const res = await userApi.updateProfile(data, '69ef218b-1f26-4193-a6f6-9e45e9170b14');
+
+      toast({
+        title: 'Update profile successfully',
+      });
+
+      console.log(res);
+    } catch (error: AxiosError | any) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="max-w-screen-lg w-screen mx-auto px-2">
       <div className="w-full max-w-full">
         <div className="bg-red-300 h-32 relative mb-16">
           <div className="absolute -bottom-12 left-4">
-            {/* <Avatar className="w-36 h-36 border-solid border-[6px] border-white">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar> */}
-            <CompanyAvatar size="large" avatarUrl="https://github.com/shadcn.png" />
+            <UserAvatar size="large" avatarUrl="https://github.com/shadcn.png" type="employer" />
           </div>
         </div>
 
         {/* Info */}
-        <div>
-          <h2 className="font-bold text-[28px] my-1">Marshal</h2>
-          <div className="flex items-center gap-2">
-            <BriefcaseBusiness size={24} />
-            <h1>Job title: Software Engineer</h1>
-          </div>
+        <h2 className="font-bold text-[28px] my-1">Marshal</h2>
 
-          <div className="flex items-center gap-2 my-1">
-            <Building2 size={24} />
-            <h1>Location: Ho Chi Minh City, Vietnam</h1>
-          </div>
+        <EditableSection
+          isEditing={editing === 'info'}
+          initialValue={{
+            job: data.job,
+            location: data.location,
+            yearExperience: data.yearExperience,
+          }}
+          renderViewing={() => (
+            <div>
+              <div className="flex items-center gap-2">
+                <BriefcaseBusiness size={24} />
+                <h1>Job title: {data.job}</h1>
+              </div>
 
-          <div className="flex items-center gap-2 my-1">
-            <Calendar size={24} />
-            <h1>Experience: 5 years</h1>
-          </div>
-        </div>
+              <div className="flex items-center gap-2 my-1">
+                <Building2 size={24} />
+                <h1>Location: {data.location}</h1>
+              </div>
+
+              <div className="flex items-center gap-2 my-1">
+                <Calendar size={24} />
+                <h1>Experience: {data.yearExperience} years</h1>
+              </div>
+            </div>
+          )}
+          renderEditing={(tempValue, setTempValue) => <InfoSection tempValue={tempValue} setTempValue={setTempValue} />}
+          handleCancel={() => setEditing(null)}
+          handleSave={handleUpdateProfile}
+          handleEdit={() => setEditing('info')}
+        />
 
         <Separator className="my-8" />
 
@@ -173,7 +247,7 @@ function ProfilePage() {
             </div>
           )}
           handleCancel={() => setEditing(null)}
-          handleSave={() => {}}
+          handleSave={handleUpdateProfile}
           handleEdit={() => setEditing('about')}
         />
 
@@ -198,7 +272,7 @@ function ProfilePage() {
             <SkillsSection tempValue={tempValue} setTempValue={setTempValue} />
           )}
           handleCancel={() => setEditing(null)}
-          handleSave={() => {}}
+          handleSave={handleUpdateProfile}
           handleEdit={() => setEditing('skills')}
         />
 

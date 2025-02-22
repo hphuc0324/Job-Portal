@@ -1,8 +1,9 @@
+import axiosClient, { CustomAxiosRequestConfig } from '@/apis/api-client';
 import authApi from '@/apis/auth-api';
 import { LoginFormSchemaType } from '@/types/schemas/login';
 import { RegisterFormSchemaType } from '@/types/schemas/register';
-import { AxiosError } from 'axios';
-import { createContext, ReactNode, useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import { createContext, ReactNode, useLayoutEffect, useState } from 'react';
 
 interface User {
   id: string;
@@ -94,6 +95,60 @@ function AuthProvider({ children }: { children: ReactNode }) {
       return false;
     }
   };
+
+  useLayoutEffect(() => {
+    const authInterceptor = axiosClient.interceptors.request.use((config) => {
+      const token = localStorage.getItem('token');
+      const customConfig = config as CustomAxiosRequestConfig;
+
+      customConfig.headers.Authorization =
+        !customConfig._retry && token ? `Bearer ${token}` : customConfig.headers.Authorization;
+
+      return customConfig;
+    });
+
+    return () => {
+      axiosClient.interceptors.request.eject(authInterceptor);
+    };
+  }, [user]);
+
+  useLayoutEffect(() => {
+    const refreshInterceptor = axiosClient.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config as CustomAxiosRequestConfig;
+
+        if (error.status === 401 && error.response.data.message === 'Invalid JWT token') {
+          try {
+            const refreshToken = localStorage.getItem('refreshToken');
+            const res = await axiosClient.post('/auth/refresh-token', {
+              'refresh-token': refreshToken,
+            });
+            const result = res.data;
+
+            localStorage.setItem('token', result.data.token);
+            localStorage.setItem('refreshToken', result.data['refresh-token']);
+
+            originalRequest.headers.Authorization = `Bearer ${result.data.token}`;
+            originalRequest._retry = true;
+
+            return axiosClient(originalRequest);
+          } catch (error) {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            setUser(null);
+          }
+        }
+
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      axiosClient.interceptors.response.eject(refreshInterceptor);
+    };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, register, error, socialCallback }}>{children}</AuthContext.Provider>

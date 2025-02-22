@@ -1,10 +1,10 @@
 import { Separator } from './ui/separator';
-import CompanyAvatar from './company-avatar';
 import { Badge } from './ui/badge';
 import { Card, CardContent } from './ui/card';
 import { Dot } from 'lucide-react';
 import { Bookmark } from 'lucide-react';
 import { Clock } from 'lucide-react';
+import UserAvatar from './user-avatar';
 
 export interface Job {
   title: string;
@@ -29,7 +29,7 @@ function JobCard({ job }: JobCardProps) {
     <Card className="p-4 h-[220px] hover:shadow-lg cursor-pointer">
       <div>
         <div className="flex gap-1 items-center">
-          <CompanyAvatar />
+          <UserAvatar />
           <div className="flex flex-col justify-between flex-1">
             <h3 className="font-bold">{job.title}</h3>
             <span className="flex font-semibold text-sm items-center">

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 
 const endPoint = import.meta.env.VITE_API_END_POINT;
 
@@ -8,5 +8,9 @@ const axiosClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 
 export default axiosClient;
