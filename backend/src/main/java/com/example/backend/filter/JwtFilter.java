@@ -90,8 +90,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/auth/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/auth/refresh-token", apiPrefix), "POST"),
                 Pair.of(String.format("%s/auth/social-login", apiPrefix), "GET"),
-                Pair.of(String.format("%s/auth/social/callback", apiPrefix), "GET")
-
+                Pair.of(String.format("%s/auth/social/callback", apiPrefix), "GET"),
+                Pair.of(String.format("%s/user/getAll", apiPrefix), "GET"),
+                Pair.of(String.format("%s/user/profile", apiPrefix), "GET")
         );
 
         for (Pair<String, String> pair : bypass) {

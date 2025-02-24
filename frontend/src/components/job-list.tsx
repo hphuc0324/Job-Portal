@@ -1,4 +1,4 @@
-import { Job } from './job-card';
+import { Job } from '@/types/dtos';
 import JobCard from './job-card';
 
 interface JobListProps {

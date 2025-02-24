@@ -1,25 +1,31 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.RefreshTokenDTO;
-import com.example.backend.dto.UserLoginDTO;
-import com.example.backend.dto.UserRegisterDTO;
-import com.example.backend.dto.UserUpdateDTO;
+import com.example.backend.dto.*;
 import com.example.backend.exception.BadRequestException;
 import com.example.backend.exception.DataNotFoundException;
 import com.example.backend.exception.EmailAlreadyExistsException;
 import com.example.backend.exception.WrongCredentialsException;
+import com.example.backend.mapper.ExperienceMapper;
 import com.example.backend.mapper.UserMapper;
+import com.example.backend.model.Experience;
 import com.example.backend.model.Role;
 import com.example.backend.model.Token;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.specification.UserSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,8 +42,10 @@ public class UserService {
     private final JwtService jwtService;
     private final RoleService roleService;
     private final TokenService tokenService;
+    private final ExperienceService experienceService;
 
     private final UserMapper userMapper;
+    private final ExperienceMapper experienceMapper;
 
 
     public String login(UserLoginDTO userLoginDTO) {
@@ -92,6 +100,7 @@ public class UserService {
                 .avatarUrl(userRegisterDTO.getAvatarUrl())
                 .role(role.get())
                 .status("active")
+                .experience(0)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -188,5 +197,41 @@ public class UserService {
         return foundUser.get();
     }
 
+    public Page<UserDTO> getFilteredUsers(Pageable pageable, UserFilterDTO filter){
+        Specification<User> specification = UserSpecification.withFilters(filter);
 
+        Page<User> users =  userRepository.findAll(specification, pageable);
+
+        System.out.println(users.getContent().size());
+        return users.map(userMapper::toUserDTO);
+    }
+
+    public UserDetailsDTO getUserDetails(UUID id) {
+        Optional<User> foundUser = userRepository.findById(id);
+
+
+        if(foundUser.isEmpty()){
+            throw new DataNotFoundException("User not found");
+        }
+
+        User user = foundUser.get();
+        UserDetailsDTO userDetailsDTO = userMapper.toUserDetailsDTO(user);
+
+        if(user.getRole().getRoleName().equals("applicant")){
+            List<Experience> experiences = experienceService.getAllExperiences(user.getId());
+            List<ExperienceDTO> mappedExperiences = experiences.stream().map((experience -> {
+                return ExperienceDTO.builder()
+                        .id(experience.getId())
+                        .role(experience.getRole())
+                        .company(userMapper.toUserDTO(experience.getCompany()))
+                        .startDate(experience.getStartDate())
+                        .endDate(experience.getEndDate())
+                        .isCurrentlyWorking(experience.isCurrentlyWorking())
+                        .build();
+            })).toList();
+            userDetailsDTO.setExperiences(mappedExperiences);
+        }
+
+        return userDetailsDTO;
+    }
 }

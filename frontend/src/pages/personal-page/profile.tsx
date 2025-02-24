@@ -4,18 +4,18 @@ import { Separator } from '@/components/ui/separator';
 import { X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserAvatar from '@/components/user-avatar';
-import { Job } from '@/components/job-card';
 import JobList from '@/components/job-list';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditableSection from '@/components/editable-section';
-import { Experience } from '@/components/user-experience';
 import UserExperienceSection from '@/components/user-experience-section';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { AxiosError } from 'axios';
 import userApi from '@/apis/user-api';
 import { useToast } from '@/hooks/use-toast';
-import { title } from 'process';
+import { Roles } from '@/types/schemas/register';
+import { Experience } from '@/types/dtos';
+import { Job } from '@/types/dtos';
 
 const job: Job = {
   title: 'Software Engineer',
@@ -31,13 +31,22 @@ const job: Job = {
   benefit: 'something',
   status: 'active',
   level: 'Intern',
+  company: {
+    id: '09df2327-a1e3-4f90-a8b4-728e3039eaa4',
+    name: 'Google',
+    role: Roles.EMPLOYER,
+  },
 };
 
 const experience: Experience = {
   role: 'Developer',
   startDate: new Date('2020-09-09'),
   isCurrentlyWorking: true,
-  company: 'google',
+  company: {
+    id: '09df2327-a1e3-4f90-a8b4-728e3039eaa4',
+    name: 'Google',
+    role: Roles.EMPLOYER,
+  },
   location: 'Vietnam',
 };
 
@@ -145,10 +154,28 @@ function ProfilePage() {
     about:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam, voluptate',
     skills: ['javascript', 'html', 'css'],
-    experience: [experience, experience],
+    experiences: [experience, experience],
     role: 'applicant',
   });
   const { toast } = useToast();
+
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [companiesRes, userDetailRes] = await Promise.all([
+        userApi.getUsers({ role: Roles.CANDIDATE }, 0, 100),
+        userApi.getUserDetails(id ? id : ''),
+      ]);
+
+      setCompanies(companiesRes.data.data.content);
+      setData({ ...userDetailRes.data.data, skills: userDetailRes.data.data?.skills?.split(',') });
+
+      console.log(userDetailRes);
+    };
+
+    fetchData();
+  }, []);
 
   const handleUpdateProfile = async (data: any) => {
     try {
@@ -286,7 +313,7 @@ function ProfilePage() {
         <Separator className="my-8" />
 
         {/* Experience */}
-        <UserExperienceSection experiences={data.experience} />
+        <UserExperienceSection experiences={data.experiences} companies={companies} />
       </div>
     </div>
   );

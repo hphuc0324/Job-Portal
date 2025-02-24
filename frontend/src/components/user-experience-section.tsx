@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Experience } from './user-experience';
 import UserExperience from './user-experience';
 import { Pencil, Plus } from 'lucide-react';
 import { Input } from './ui/input';
@@ -8,20 +7,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import DatePicker from './form-input/date-picker';
 import { Checkbox } from './ui/checkbox';
 import { Button } from './ui/button';
+import { User } from '@/types/dtos';
+import { Experience } from '@/types/dtos';
+import lodash from 'lodash';
 
 interface UserExperienceSectionProps {
   experiences: Experience[];
+  companies: User[];
 }
 
 interface ExperienceEditorProps {
   index: number;
   experience: Experience;
+  companies: User[];
   setExperience: (index: number, field: string, value: any) => void;
   onCancel: () => void;
-  onSubmit: (experience: Experience) => void;
+  onSubmit: () => void;
 }
 
-const ExperienceEditor = ({ index, experience, setExperience, onCancel, onSubmit }: ExperienceEditorProps) => {
+const ExperienceEditor = ({
+  index,
+  experience,
+  setExperience,
+  onCancel,
+  onSubmit,
+  companies,
+}: ExperienceEditorProps) => {
   return (
     <div className="w-full">
       <div className="w-full grid grid-cols-1 md:grid-cols-3 md:gap-4 items-center">
@@ -47,14 +58,16 @@ const ExperienceEditor = ({ index, experience, setExperience, onCancel, onSubmit
         </div>
         <div className="space-y-1">
           <Label htmlFor="company">Company</Label>
-          <Select value={experience.company} onValueChange={(value) => setExperience(index, 'company', value)}>
+          <Select value={experience.company.id} onValueChange={(value) => setExperience(index, 'company.id', value)}>
             <SelectTrigger id="company" className="border-solid border-black border-[1px]">
               <SelectValue placeholder="Company" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="google">Google</SelectItem>
-              <SelectItem value="spotify">Spotify</SelectItem>
-              <SelectItem value="facebook">Facebook</SelectItem>
+              {companies.map((company) => (
+                <SelectItem key={company.id} value={company.id}>
+                  {company.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -91,7 +104,7 @@ const ExperienceEditor = ({ index, experience, setExperience, onCancel, onSubmit
       </div>
 
       <div className="space-x-2 my-2">
-        <Button onClick={() => onSubmit(experience)}>Save</Button>
+        <Button onClick={onSubmit}>Save</Button>
         <Button variant="destructive" onClick={onCancel}>
           Cancel
         </Button>
@@ -100,7 +113,7 @@ const ExperienceEditor = ({ index, experience, setExperience, onCancel, onSubmit
   );
 };
 
-function UserExperienceSection({ experiences }: UserExperienceSectionProps) {
+function UserExperienceSection({ experiences, companies }: UserExperienceSectionProps) {
   const [tempValue, setTempValue] = useState<Experience[]>(experiences);
   const [isEditTing, setIsEditing] = useState<number | null>(null);
 
@@ -125,7 +138,17 @@ function UserExperienceSection({ experiences }: UserExperienceSectionProps) {
         role: '',
         startDate: new Date(),
         isCurrentlyWorking: false,
-        company: '',
+        company: {
+          id: '',
+          name: '',
+          job: '',
+          location: '',
+          experience: '',
+          avatarUrl: '',
+          role: '',
+          about: '',
+          skills: '',
+        },
         location: '',
       },
       ...prev,
@@ -134,7 +157,15 @@ function UserExperienceSection({ experiences }: UserExperienceSectionProps) {
   };
 
   const handleEditExperience = (index: number, field: string, value: any) => {
-    setTempValue((prev) => [...prev.slice(0, index), { ...prev[index], [field]: value }, ...prev.slice(index + 1)]);
+    setTempValue((prev) => {
+      const newState = [...prev];
+      lodash.set(newState[index], field, value);
+      return newState;
+    });
+  };
+
+  const handleSubmit = () => {
+    console.log(tempValue);
   };
 
   return (
@@ -172,11 +203,10 @@ function UserExperienceSection({ experiences }: UserExperienceSectionProps) {
                 <ExperienceEditor
                   index={isEditTing}
                   experience={experience}
+                  companies={companies}
                   onCancel={handleCancel}
                   setExperience={handleEditExperience}
-                  onSubmit={(experience) => {
-                    console.log(experience);
-                  }}
+                  onSubmit={handleSubmit}
                 />
               )}
             </div>

@@ -1,33 +1,25 @@
 import { Dot } from 'lucide-react';
 import UserAvatar from './user-avatar';
+import { Experience } from '@/types/dtos';
 
 interface UserExperienceProps {
   experience: Experience;
 }
 
-export interface Experience {
-  role: string;
-  startDate: Date;
-  endDate?: Date;
-  isCurrentlyWorking: boolean;
-  company: string;
-  location: string;
-}
-
 function UserExperience({ experience }: UserExperienceProps) {
   return (
     <div className="flex flex-1 gap-1">
-      <UserAvatar />
+      <UserAvatar avatarUrl={experience.company.avatarUrl} />
 
       <div className="flex flex-col justify-between flex-1">
         <h3 className="font-bold">{experience.role}</h3>
         <span className="flex font-semibold text-sm items-center">
-          {experience.company} <Dot className="w-4 h-4" /> {experience.location}
+          {experience.company.name} <Dot className="w-4 h-4" /> {experience.company.location}
         </span>
       </div>
 
       <span className="text-sm font-semibold">
-        {experience.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} -{' '}
+        {new Date(experience.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} -{' '}
         {experience.isCurrentlyWorking
           ? 'Present'
           : experience.endDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}

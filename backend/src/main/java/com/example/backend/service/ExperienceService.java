@@ -6,6 +6,8 @@ import com.example.backend.exception.DataNotFoundException;
 import com.example.backend.model.Experience;
 import com.example.backend.model.User;
 import com.example.backend.repository.ExperienceRepository;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +18,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExperienceService {
     private final ExperienceRepository experienceRepository;
-    private final UserService userService;
+    private final EntityManager entityManager;
 
-    public void processExperience(List<UserExperienceDTO> experiences, UUID userID) {
-        List<Experience> foundExperiences = experienceRepository.findAllByWorkerId(userID);
+    public void processExperience(List<UserExperienceDTO> experiences, UUID userId) {
 
-        User worker = userService.findById(userID);
+        List<Experience> foundExperiences = experienceRepository.findAllByWorkerId(userId);
+
+        User user = entityManager.getReference(User.class, userId);
 
         Set<UUID> incomingIds = experiences.stream()
                 .filter(exp -> exp.getId() != null)
@@ -40,10 +43,10 @@ public class ExperienceService {
                 newExperience.setRole(experience.getRole());
                 newExperience.setStartDate(experience.getStartDate());
                 newExperience.setEndDate(experience.getEndDate());
-                newExperience.setWorker(worker);
+                newExperience.setWorker(user);
                 newExperience.setCurrentlyWorking(experience.getIsCurrentlyWorking());
 
-                User company = userService.findById(experience.getCompanyId());
+                User company = entityManager.getReference(User.class, experience.getCompanyId());
                 newExperience.setCompany(company);
 
                 experienceRepository.save(newExperience);
@@ -58,13 +61,17 @@ public class ExperienceService {
                 updatedExperience.setRole(experience.getRole());
                 updatedExperience.setStartDate(experience.getStartDate());
                 updatedExperience.setEndDate(experience.getEndDate());
-                updatedExperience.setWorker(worker);
+                updatedExperience.setWorker(user);
                 updatedExperience.setCurrentlyWorking(experience.getIsCurrentlyWorking());
 
-                User company = userService.findById(experience.getCompanyId());
+                User company = entityManager.getReference(User.class, experience.getCompanyId());
                 updatedExperience.setCompany(company);
                 experienceRepository.save(updatedExperience);
             }
         }
+    }
+
+    public List<Experience> getAllExperiences(UUID userID) {
+       return experienceRepository.findAllByWorkerId(userID);
     }
 }

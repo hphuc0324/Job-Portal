@@ -5,20 +5,7 @@ import { Dot } from 'lucide-react';
 import { Bookmark } from 'lucide-react';
 import { Clock } from 'lucide-react';
 import UserAvatar from './user-avatar';
-
-export interface Job {
-  title: string;
-  location: string;
-  slug: string;
-  type: 'fulltime' | 'partime';
-  salary: number;
-  description: string;
-  requirement: string;
-  benefit: string;
-  status: string;
-  level: string;
-  experience: number;
-}
+import { Job } from '@/types/dtos';
 
 interface JobCardProps {
   job: Job;
