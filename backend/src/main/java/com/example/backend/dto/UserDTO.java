@@ -15,7 +15,6 @@ public class UserDTO {
 
     private String email;
 
-    @JsonProperty("avatar_url")
     private String avatarUrl;
 
     private String role;

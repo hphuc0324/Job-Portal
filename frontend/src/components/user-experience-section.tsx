@@ -14,6 +14,7 @@ import lodash from 'lodash';
 interface UserExperienceSectionProps {
   experiences: Experience[];
   companies: User[];
+  onSubmit: (experiences: Experience[]) => void;
 }
 
 interface ExperienceEditorProps {
@@ -113,7 +114,7 @@ const ExperienceEditor = ({
   );
 };
 
-function UserExperienceSection({ experiences, companies }: UserExperienceSectionProps) {
+function UserExperienceSection({ experiences, companies, onSubmit }: UserExperienceSectionProps) {
   const [tempValue, setTempValue] = useState<Experience[]>(experiences);
   const [isEditTing, setIsEditing] = useState<number | null>(null);
 
@@ -164,8 +165,9 @@ function UserExperienceSection({ experiences, companies }: UserExperienceSection
     });
   };
 
-  const handleSubmit = () => {
-    console.log(tempValue);
+  const handleSubmit = async () => {
+    setIsEditing(null);
+    await onSubmit(tempValue);
   };
 
   return (
@@ -177,40 +179,29 @@ function UserExperienceSection({ experiences, companies }: UserExperienceSection
         </button>
       </div>
       <div>
-        {isEditTing === null &&
-          experiences.map((experience, index) => (
-            <div key={index} className="flex items-start gap-4 my-2">
-              <UserExperience experience={experience} />
-              <button onClick={() => handleEdit(index)}>
-                <Pencil className="w-4 h-4 text-gray-400" />
-              </button>
-            </div>
-          ))}
+        {tempValue.map((experience, index) => (
+          <div key={index} className="flex items-start gap-4 my-2">
+            {isEditTing !== index && (
+              <>
+                <UserExperience experience={experience} />
+                <button onClick={() => handleEdit(index)}>
+                  <Pencil className="w-4 h-4 text-gray-400" />
+                </button>
+              </>
+            )}
 
-        {isEditTing !== null &&
-          tempValue.map((experience, index) => (
-            <div key={index} className="flex items-start gap-4 my-2">
-              {isEditTing !== index && (
-                <>
-                  <UserExperience experience={experience} />
-                  <button onClick={() => handleEdit(index)}>
-                    <Pencil className="w-4 h-4 text-gray-400" />
-                  </button>
-                </>
-              )}
-
-              {isEditTing === index && (
-                <ExperienceEditor
-                  index={isEditTing}
-                  experience={experience}
-                  companies={companies}
-                  onCancel={handleCancel}
-                  setExperience={handleEditExperience}
-                  onSubmit={handleSubmit}
-                />
-              )}
-            </div>
-          ))}
+            {isEditTing === index && (
+              <ExperienceEditor
+                index={isEditTing}
+                experience={experience}
+                companies={companies}
+                onCancel={handleCancel}
+                setExperience={handleEditExperience}
+                onSubmit={handleSubmit}
+              />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

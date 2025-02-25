@@ -13,5 +13,5 @@ public class UserDetailsDTO {
     private String about;
     private String skills;
     private Integer experience;
-    private List<ExperienceDTO> experiences;
+    private List<UserExperienceDTO> experiences;
 }

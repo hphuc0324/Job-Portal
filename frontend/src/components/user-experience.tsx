@@ -14,7 +14,7 @@ function UserExperience({ experience }: UserExperienceProps) {
       <div className="flex flex-col justify-between flex-1">
         <h3 className="font-bold">{experience.role}</h3>
         <span className="flex font-semibold text-sm items-center">
-          {experience.company.name} <Dot className="w-4 h-4" /> {experience.company.location}
+          {experience.company.name} <Dot className="w-4 h-4" /> {experience.location}
         </span>
       </div>
 

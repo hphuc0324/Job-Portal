@@ -26,6 +26,9 @@ public class Experience {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "location")
+    private String location;
+
     @Column(name = "start_date")
     private Date startDate;
 

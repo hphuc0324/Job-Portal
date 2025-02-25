@@ -46,7 +46,7 @@ public class ExperienceService {
                 newExperience.setWorker(user);
                 newExperience.setCurrentlyWorking(experience.getIsCurrentlyWorking());
 
-                User company = entityManager.getReference(User.class, experience.getCompanyId());
+                User company = entityManager.getReference(User.class, experience.getCompany().getId());
                 newExperience.setCompany(company);
 
                 experienceRepository.save(newExperience);
@@ -64,7 +64,7 @@ public class ExperienceService {
                 updatedExperience.setWorker(user);
                 updatedExperience.setCurrentlyWorking(experience.getIsCurrentlyWorking());
 
-                User company = entityManager.getReference(User.class, experience.getCompanyId());
+                User company = entityManager.getReference(User.class, experience.getCompany().getId());
                 updatedExperience.setCompany(company);
                 experienceRepository.save(updatedExperience);
             }

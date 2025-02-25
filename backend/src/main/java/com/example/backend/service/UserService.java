@@ -14,8 +14,6 @@ import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.specification.UserSpecification;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -219,16 +217,15 @@ public class UserService {
 
         if(user.getRole().getRoleName().equals("applicant")){
             List<Experience> experiences = experienceService.getAllExperiences(user.getId());
-            List<ExperienceDTO> mappedExperiences = experiences.stream().map((experience -> {
-                return ExperienceDTO.builder()
-                        .id(experience.getId())
-                        .role(experience.getRole())
-                        .company(userMapper.toUserDTO(experience.getCompany()))
-                        .startDate(experience.getStartDate())
-                        .endDate(experience.getEndDate())
-                        .isCurrentlyWorking(experience.isCurrentlyWorking())
-                        .build();
-            })).toList();
+            List<UserExperienceDTO> mappedExperiences = experiences.stream().map((experience -> UserExperienceDTO.builder()
+                    .id(experience.getId())
+                    .role(experience.getRole())
+                    .company(userMapper.toUserDTO(experience.getCompany()))
+                    .location(experience.getLocation())
+                    .startDate(experience.getStartDate())
+                    .endDate(experience.getEndDate())
+                    .isCurrentlyWorking(experience.isCurrentlyWorking())
+                    .build())).toList();
             userDetailsDTO.setExperiences(mappedExperiences);
         }
 

@@ -148,9 +148,10 @@ function ProfilePage() {
   const { id } = useParams();
   const [editing, setEditing] = useState<string | null>(null);
   const [data, setData] = useState({
+    name: 'Marshal',
     job: 'Developer',
     location: 'Vietnam',
-    yearExperience: 5,
+    experience: 5,
     about:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam, voluptate',
     skills: ['javascript', 'html', 'css'],
@@ -194,6 +195,28 @@ function ProfilePage() {
 
       console.log(res);
     } catch (error: AxiosError | any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
+      console.log(error.message);
+    }
+  };
+
+  const handleUpdateExperience = async (data: Experience[]) => {
+    try {
+      await userApi.updateExperiences(id ? id : '', data);
+
+      toast({
+        title: 'Update experience successfully',
+      });
+    } catch (error: AxiosError | any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
       console.log(error.message);
     }
   };
@@ -208,31 +231,37 @@ function ProfilePage() {
         </div>
 
         {/* Info */}
-        <h2 className="font-bold text-[28px] my-1">Marshal</h2>
+        <h2 className="font-bold text-[28px] my-1">{data.name}</h2>
 
         <EditableSection
           isEditing={editing === 'info'}
           initialValue={{
             job: data.job,
             location: data.location,
-            yearExperience: data.yearExperience,
+            yearExperience: data.experience,
           }}
           renderViewing={() => (
             <div>
-              <div className="flex items-center gap-2">
-                <BriefcaseBusiness size={24} />
-                <h1>Job title: {data.job}</h1>
-              </div>
+              {data.job && (
+                <div className="flex items-center gap-2">
+                  <BriefcaseBusiness size={24} />
+                  <h1>Job title: {data.job}</h1>
+                </div>
+              )}
 
-              <div className="flex items-center gap-2 my-1">
-                <Building2 size={24} />
-                <h1>Location: {data.location}</h1>
-              </div>
+              {data.location && (
+                <div className="flex items-center gap-2 my-1">
+                  <Building2 size={24} />
+                  <h1>Location: {data.location}</h1>
+                </div>
+              )}
 
-              <div className="flex items-center gap-2 my-1">
-                <Calendar size={24} />
-                <h1>Experience: {data.yearExperience} years</h1>
-              </div>
+              {data.experience && (
+                <div className="flex items-center gap-2 my-1">
+                  <Calendar size={24} />
+                  <h1>Experience: {data.experience} years</h1>
+                </div>
+              )}
             </div>
           )}
           renderEditing={(tempValue, setTempValue) => <InfoSection tempValue={tempValue} setTempValue={setTempValue} />}
@@ -313,7 +342,7 @@ function ProfilePage() {
         <Separator className="my-8" />
 
         {/* Experience */}
-        <UserExperienceSection experiences={data.experiences} companies={companies} />
+        <UserExperienceSection experiences={data.experiences} companies={companies} onSubmit={handleUpdateExperience} />
       </div>
     </div>
   );

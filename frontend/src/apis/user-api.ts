@@ -1,5 +1,6 @@
 import UserFilter from '@/types/filters/user-filter';
 import axiosClient from './api-client';
+import { Experience } from '@/types/dtos';
 
 const baseURL = '/user';
 
@@ -35,6 +36,10 @@ const userApi = {
 
   getUserDetails: (userId: string) => {
     return axiosClient.get(`${baseURL}/profile/${userId}`);
+  },
+
+  updateExperiences: (userId: string, data: Experience[]) => {
+    return axiosClient.post(`${baseURL}/profile/${userId}/experiences`, data);
   },
 };
 

@@ -58,7 +58,6 @@ public class UserController {
             @PathVariable(value = "id") UUID id,
             @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
 
-        System.out.println(userUpdateDTO);
 
         User user = userService.updateUser(id, userUpdateDTO);
 
@@ -105,7 +104,7 @@ public class UserController {
     @IsProfileOwner(idParam = "id")
     public ResponseEntity<ResponseObject> updateExperiences(
             @PathVariable(value = "id") UUID id,
-            @Valid @RequestBody List<UserExperienceDTO> userExperienceDTOs
+            @RequestBody List<UserExperienceDTO> userExperienceDTOs
     ) {
 
         experienceService.processExperience(userExperienceDTOs, id);
