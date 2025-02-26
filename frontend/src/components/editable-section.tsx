@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect, useLayoutEffect } from 'react';
+import { ReactNode, useState, useLayoutEffect } from 'react';
 import { Pencil, Check, X } from 'lucide-react';
 
 interface EditableSectionProps {
@@ -24,6 +24,8 @@ function EditableSection({
 }: EditableSectionProps) {
   const [tempValue, setTempValue] = useState(initialValue);
 
+  console.log(isEditing);
+
   useLayoutEffect(() => {
     if (isEditing) {
       setTempValue(initialValue);
@@ -35,7 +37,7 @@ function EditableSection({
       {isEditing ? renderEditing(tempValue, setTempValue) : renderViewing()}
 
       <div className="absolute right-0 top-0">
-        {isEditing ?? (
+        {isEditing && (
           <div className="flex items-center gap-1 ">
             <button
               onClick={() => {
@@ -51,7 +53,7 @@ function EditableSection({
           </div>
         )}
 
-        {allowEdit && (
+        {allowEdit && !isEditing && (
           <button onClick={handleEdit}>
             <Pencil className="text-yellow-500 w-5 h-5" />
           </button>

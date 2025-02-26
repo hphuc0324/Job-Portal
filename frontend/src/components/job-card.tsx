@@ -35,7 +35,7 @@ function JobCard({ job }: JobCardProps) {
       </div>
 
       <CardContent className="p-0">
-        <p className="max-h-14 text-sm overflow-hidden text-ellipsis ">{job.description}</p>
+        <p className="max-h-14 h-14 text-sm overflow-hidden text-ellipsis ">{job.description}</p>
 
         <Separator className="my-3" />
 
