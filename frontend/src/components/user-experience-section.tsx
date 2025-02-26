@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import UserExperience from './user-experience';
-import { Pencil, Plus } from 'lucide-react';
+import { Pencil, Plus, Trash } from 'lucide-react';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -171,6 +171,15 @@ function UserExperienceSection({ experiences, companies, onSubmit, allowEdit = f
     await onSubmit(tempValue);
   };
 
+  const handleRemoveExperience = async (index: number) => {
+    const temp = tempValue.filter((experience, i) => i !== index);
+
+    setTempValue(temp);
+
+    await onSubmit(temp);
+    // setIsEditing(null);
+  };
+
   return (
     <div>
       <div className="my-4 relative">
@@ -188,9 +197,14 @@ function UserExperienceSection({ experiences, companies, onSubmit, allowEdit = f
               <>
                 <UserExperience experience={experience} />
                 {allowEdit && (
-                  <button onClick={() => handleEdit(index)}>
-                    <Pencil className="w-4 h-4 text-gray-400" />
-                  </button>
+                  <div className="flex gap-2 items-center">
+                    <button onClick={() => handleEdit(index)}>
+                      <Pencil className="w-4 h-4 text-gray-400" />
+                    </button>
+                    <button onClick={() => handleRemoveExperience(index)}>
+                      <Trash className="w-4 h-4 text-gray-400" />
+                    </button>
+                  </div>
                 )}
               </>
             )}

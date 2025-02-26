@@ -40,9 +40,9 @@ function EditableSection({
         {isEditing && (
           <div className="flex items-center gap-1 ">
             <button
-              onClick={() => {
+              onClick={async () => {
                 handleCancel();
-                handleSave(tempValue);
+                await handleSave(tempValue);
               }}
             >
               <Check className="text-green-500 w-5 h-5" />

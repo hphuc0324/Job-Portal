@@ -57,13 +57,14 @@ public class UserController {
             @PathVariable(value = "id") UUID id,
             @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
 
-
+        System.out.println(userUpdateDTO);
         User user = userService.updateUser(id, userUpdateDTO);
+        UserDetailsDTO userDetails = userService.getUserDetails(id);
 
         return ResponseEntity.ok().body(ResponseObject
                 .builder()
                 .message("User updated successfully")
-                .data(user)
+                .data(userDetails)
                 .status(HttpStatus.OK)
                 .build());
     }

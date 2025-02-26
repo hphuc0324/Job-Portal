@@ -125,8 +125,8 @@ function EmployerPage({ data, handleUpdateProfile, isOwner }: EmployerPageProps)
             <h2 className="font-bold text-[24px] my-1">About</h2>
             <textarea
               className="w-full h-32 outline-black focus:outline-none border-solid border-[2px] border-black p-2 rounded-sm resize-none"
-              defaultValue={tempValue.about}
-              onChange={(e) => setTempValue(e.target.value)}
+              defaultValue={tempValue.description}
+              onChange={(e) => setTempValue({ ...tempValue, description: e.target.value })}
             />
           </div>
         )}

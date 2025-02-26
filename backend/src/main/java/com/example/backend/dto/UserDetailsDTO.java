@@ -13,6 +13,7 @@ public class UserDetailsDTO {
     private String about;
     private String skills;
     private Integer experience;
+    private String description;
     private List<UserExperienceDTO> experiences;
     private String role;
     private List<JobDTO> jobs;

@@ -11,8 +11,7 @@ public class UserUpdateDTO {
     private String avatarUrl;
     private String job;
     private String location;
-
-    @JsonProperty("yearExperience")
+    private String description;
     private Integer experience;
     private String skills;
     private String status;

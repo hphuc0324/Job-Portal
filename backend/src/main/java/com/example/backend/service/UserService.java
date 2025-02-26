@@ -178,7 +178,6 @@ public class UserService {
         }else if(Objects.equals(roleName, "employer")){
             userMapper.updateEmployer(userUpdateDTO, user);
         }
-
         System.out.println(user);
 
         return userRepository.save(user);

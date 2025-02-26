@@ -49,100 +49,6 @@ const experience: Experience = {
   location: 'Vietnam',
 };
 
-const InfoSection = ({ tempValue, setTempValue }: any) => {
-  return (
-    <div className="grid grid-cols-3 gap-3">
-      <div>
-        <Label htmlFor="job">Job</Label>
-        <Input
-          id="job"
-          placeholder="Job title"
-          value={tempValue.job}
-          onChange={(e) => setTempValue({ ...tempValue, job: e.target.value })}
-          className="border-solid border-black border-[1px] "
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="location">Location</Label>
-        <Input
-          id="location"
-          placeholder="Location"
-          value={tempValue.location}
-          onChange={(e) => setTempValue({ ...tempValue, location: e.target.value })}
-          className="border-solid border-black border-[1px] "
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="yearExperience">Experience</Label>
-        <Input
-          id="yearExperience"
-          placeholder="Year of experience"
-          value={tempValue.yearExperience}
-          type="number"
-          onChange={(e) => setTempValue({ ...tempValue, yearExperience: e.target.value })}
-          className="border-solid border-black border-[1px] "
-        />
-      </div>
-    </div>
-  );
-};
-
-const SkillsSection = ({ tempValue, setTempValue }: any) => {
-  const [newSkill, setNewSkill] = useState<string>('');
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      if (!newSkill.trim()) {
-        return;
-      }
-      addSkill();
-      setNewSkill('');
-    }
-  };
-
-  const addSkill = () => {
-    if (tempValue.skills.includes(newSkill.trim())) {
-      return;
-    }
-
-    setTempValue({ ...tempValue, skills: [...tempValue.skills, newSkill.trim()] });
-  };
-
-  return (
-    <div>
-      <h2 className="font-bold text-[24px] my-1">Skills</h2>
-      <div className="flex gap-2 flex-wrap p-4 border-solid border-[2px] border-black rounded-sm">
-        {tempValue.skills?.map((skill: string, index: number) => (
-          <div
-            key={index}
-            className="min-w-8 flex items-center gap-2 text-center text-sm bg-black text-white py-1 px-2 rounded-full"
-          >
-            {skill.trim()}
-            <button
-              className="rounded-[50%] p-0"
-              onClick={() => {
-                const updatedSkills = tempValue.skills.filter((s: string) => s !== skill);
-                setTempValue({ ...tempValue, skills: updatedSkills });
-              }}
-            >
-              <X size="16px" />
-            </button>
-          </div>
-        ))}
-        <input
-          autoFocus
-          className="focus:outline-none"
-          value={newSkill}
-          onChange={(e) => setNewSkill(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-      </div>
-    </div>
-  );
-};
-
 function ProfilePage() {
   const { id } = useParams();
 
@@ -155,21 +61,19 @@ function ProfilePage() {
     job: 'Developer',
     location: 'Vietnam',
     experience: 5,
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam, voluptate',
+    description: '',
     skills: ['javascript', 'html', 'css'],
     experiences: [experience, experience],
     role: 'applicant',
     jobs: [],
   });
-  const [editing, setEditing] = useState<string | null>(null);
 
   const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const [companiesRes, userDetailRes] = await Promise.all([
-        userApi.getUsers({ role: Roles.CANDIDATE }, 0, 100),
+        userApi.getUsers({ role: Roles.EMPLOYER }, 0, 100),
         userApi.getUserDetails(id ? id : ''),
       ]);
 
@@ -196,6 +100,10 @@ function ProfilePage() {
 
       const res = await userApi.updateProfile(submitData, id ? id : '');
 
+      setData({
+        ...res.data.data,
+        skills: res.data.data.skills ? res.data.data?.skills?.split(',') : [],
+      });
       toast({
         title: 'Update profile successfully',
       });
@@ -213,7 +121,12 @@ function ProfilePage() {
 
   const handleUpdateExperience = async (data: Experience[]) => {
     try {
-      await userApi.updateExperiences(id ? id : '', data);
+      const res = await userApi.updateExperiences(id ? id : '', data);
+
+      setData((prev) => ({
+        ...prev,
+        experiences: res.data.data,
+      }));
 
       toast({
         title: 'Update experience successfully',

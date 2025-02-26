@@ -6,7 +6,6 @@ import com.example.backend.exception.DataNotFoundException;
 import com.example.backend.model.Experience;
 import com.example.backend.model.User;
 import com.example.backend.repository.ExperienceRepository;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,6 +43,7 @@ public class ExperienceService {
                 newExperience.setStartDate(experience.getStartDate());
                 newExperience.setEndDate(experience.getEndDate());
                 newExperience.setWorker(user);
+                newExperience.setLocation(experience.getLocation());
                 newExperience.setCurrentlyWorking(experience.getIsCurrentlyWorking());
 
                 User company = entityManager.getReference(User.class, experience.getCompany().getId());
@@ -62,6 +62,7 @@ public class ExperienceService {
                 updatedExperience.setStartDate(experience.getStartDate());
                 updatedExperience.setEndDate(experience.getEndDate());
                 updatedExperience.setWorker(user);
+                updatedExperience.setLocation(experience.getLocation());
                 updatedExperience.setCurrentlyWorking(experience.getIsCurrentlyWorking());
 
                 User company = entityManager.getReference(User.class, experience.getCompany().getId());

@@ -18,4 +18,5 @@ public class ExperienceDTO {
     private Date endDate;
     private boolean isCurrentlyWorking;
     private UserDTO company;
+    private String location;
 }

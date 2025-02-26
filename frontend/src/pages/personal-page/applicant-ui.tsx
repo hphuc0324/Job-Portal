@@ -114,6 +114,8 @@ interface ApplicantPageProps {
 function ApplicantPage({ data, handleUpdateProfile, companies, handleUpdateExperience, isOwner }: ApplicantPageProps) {
   const [editing, setEditing] = useState<string | null>(null);
 
+  console.log(data);
+
   return (
     <div>
       <div className="bg-red-300 h-32 relative mb-16">
@@ -128,7 +130,7 @@ function ApplicantPage({ data, handleUpdateProfile, companies, handleUpdateExper
         initialValue={{
           job: data.job,
           location: data.location,
-          yearExperience: data.experience,
+          experience: data.experience,
         }}
         renderViewing={() => (
           <div>
@@ -169,10 +171,7 @@ function ApplicantPage({ data, handleUpdateProfile, companies, handleUpdateExper
         renderViewing={() => (
           <div>
             <h2 className="font-bold text-[24px] my-1">About</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam,
-              voluptate
-            </p>
+            <p>{data.description}</p>
           </div>
         )}
         renderEditing={(tempValue, setTempValue) => (
@@ -180,8 +179,8 @@ function ApplicantPage({ data, handleUpdateProfile, companies, handleUpdateExper
             <h2 className="font-bold text-[24px] my-1">About</h2>
             <textarea
               className="w-full h-32 outline-black focus:outline-none border-solid border-[2px] border-black p-2 rounded-sm resize-none"
-              defaultValue={tempValue.about}
-              onChange={(e) => setTempValue(e.target.value)}
+              defaultValue={tempValue.description}
+              onChange={(e) => setTempValue({ ...tempValue, description: e.target.value })}
             />
           </div>
         )}
@@ -217,7 +216,12 @@ function ApplicantPage({ data, handleUpdateProfile, companies, handleUpdateExper
 
       <Separator className="my-8" />
 
-      <UserExperienceSection experiences={data.experiences} companies={companies} onSubmit={handleUpdateExperience} />
+      <UserExperienceSection
+        experiences={data.experiences}
+        companies={companies}
+        onSubmit={handleUpdateExperience}
+        allowEdit={isOwner}
+      />
     </div>
   );
 }
