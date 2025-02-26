@@ -8,6 +8,6 @@ import lombok.Data;
 public class UserFilterDTO {
     private String name;
     private String location;
-    private int yearExperience;
+    private int experience;
     private String roleName;
 }

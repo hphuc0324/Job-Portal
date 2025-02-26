@@ -28,7 +28,7 @@ public class UserSpecification {
                 predicates.add(cb.like(root.get("role").get("roleName"), "%" + filter.getRoleName() + "%"));
             }
 
-            predicates.add(cb.greaterThanOrEqualTo(root.get("experience"), filter.getYearExperience()));
+            predicates.add(cb.greaterThanOrEqualTo(root.get("experience"), filter.getExperience()));
 
 
             return cb.and(predicates.toArray(new Predicate[0]));

@@ -9,11 +9,13 @@ interface EditableSectionProps {
   handleEdit: () => void;
   isEditing: boolean;
   initialValue: any;
+  allowEdit?: boolean;
 }
 
 function EditableSection({
   isEditing,
   initialValue,
+  allowEdit = false,
   renderViewing,
   renderEditing,
   handleEdit,
@@ -33,7 +35,7 @@ function EditableSection({
       {isEditing ? renderEditing(tempValue, setTempValue) : renderViewing()}
 
       <div className="absolute right-0 top-0">
-        {isEditing ? (
+        {isEditing ?? (
           <div className="flex items-center gap-1 ">
             <button
               onClick={() => {
@@ -47,7 +49,9 @@ function EditableSection({
               <X className="text-red-500 w-5 h-5" />
             </button>
           </div>
-        ) : (
+        )}
+
+        {allowEdit && (
           <button onClick={handleEdit}>
             <Pencil className="text-yellow-500 w-5 h-5" />
           </button>

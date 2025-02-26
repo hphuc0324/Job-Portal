@@ -22,7 +22,10 @@ function UserExperience({ experience }: UserExperienceProps) {
         {new Date(experience.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} -{' '}
         {experience.isCurrentlyWorking
           ? 'Present'
-          : experience.endDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+          : new Date(experience.endDate ? experience.endDate : '').toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+            })}
       </span>
     </div>
   );

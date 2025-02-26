@@ -15,6 +15,7 @@ interface UserExperienceSectionProps {
   experiences: Experience[];
   companies: User[];
   onSubmit: (experiences: Experience[]) => void;
+  allowEdit?: boolean;
 }
 
 interface ExperienceEditorProps {
@@ -114,7 +115,7 @@ const ExperienceEditor = ({
   );
 };
 
-function UserExperienceSection({ experiences, companies, onSubmit }: UserExperienceSectionProps) {
+function UserExperienceSection({ experiences, companies, onSubmit, allowEdit = false }: UserExperienceSectionProps) {
   const [tempValue, setTempValue] = useState<Experience[]>(experiences);
   const [isEditTing, setIsEditing] = useState<number | null>(null);
 
@@ -174,9 +175,11 @@ function UserExperienceSection({ experiences, companies, onSubmit }: UserExperie
     <div>
       <div className="my-4 relative">
         <h2 className="font-bold text-[24px] my-1">Experience</h2>
-        <button className="absolute right-0 top-0 cursor-pointer">
-          <Plus onClick={handleAddExperience} className="text-yellow-500" />
-        </button>
+        {allowEdit && (
+          <button className="absolute right-0 top-0 cursor-pointer">
+            <Plus onClick={handleAddExperience} className="text-yellow-500" />
+          </button>
+        )}
       </div>
       <div>
         {tempValue.map((experience, index) => (
@@ -184,9 +187,11 @@ function UserExperienceSection({ experiences, companies, onSubmit }: UserExperie
             {isEditTing !== index && (
               <>
                 <UserExperience experience={experience} />
-                <button onClick={() => handleEdit(index)}>
-                  <Pencil className="w-4 h-4 text-gray-400" />
-                </button>
+                {allowEdit && (
+                  <button onClick={() => handleEdit(index)}>
+                    <Pencil className="w-4 h-4 text-gray-400" />
+                  </button>
+                )}
               </>
             )}
 

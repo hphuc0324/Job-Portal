@@ -7,10 +7,7 @@ import com.example.backend.exception.EmailAlreadyExistsException;
 import com.example.backend.exception.WrongCredentialsException;
 import com.example.backend.mapper.ExperienceMapper;
 import com.example.backend.mapper.UserMapper;
-import com.example.backend.model.Experience;
-import com.example.backend.model.Role;
-import com.example.backend.model.Token;
-import com.example.backend.model.User;
+import com.example.backend.model.*;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.specification.UserSpecification;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +41,7 @@ public class UserService {
 
     private final UserMapper userMapper;
     private final ExperienceMapper experienceMapper;
+    private final JobService jobService;
 
 
     public String login(UserLoginDTO userLoginDTO) {
@@ -181,6 +179,7 @@ public class UserService {
             userMapper.updateEmployer(userUpdateDTO, user);
         }
 
+        System.out.println(user);
 
         return userRepository.save(user);
     }
@@ -227,6 +226,22 @@ public class UserService {
                     .isCurrentlyWorking(experience.isCurrentlyWorking())
                     .build())).toList();
             userDetailsDTO.setExperiences(mappedExperiences);
+        }
+        else if(user.getRole().getRoleName().equals("employer")){
+            List<Job> jobs = jobService.getAllJobsByCompany(user.getId());
+            List<JobDTO> mappedJobs = jobs.stream().map((job -> JobDTO.builder()
+                    .id(job.getId())
+                    .slug(job.getSlug())
+                    .title(job.getTitle())
+                    .description(job.getDescription())
+                    .company(userMapper.toUserDTO(job.getCompany()))
+                    .location(job.getLocation())
+                    .salary(job.getSalary())
+                    .status(job.getStatus())
+                    .type(job.getType())
+                    .level(job.getLevel().getName())
+                    .build())).toList();
+            userDetailsDTO.setJobs(mappedJobs);
         }
 
         return userDetailsDTO;

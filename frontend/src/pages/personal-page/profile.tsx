@@ -7,7 +7,6 @@ import UserAvatar from '@/components/user-avatar';
 import JobList from '@/components/job-list';
 import { useEffect, useState } from 'react';
 import EditableSection from '@/components/editable-section';
-import UserExperienceSection from '@/components/user-experience-section';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { AxiosError } from 'axios';
@@ -16,6 +15,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Roles } from '@/types/schemas/register';
 import { Experience } from '@/types/dtos';
 import { Job } from '@/types/dtos';
+import ApplicantPage from './applicant-ui';
+import EmployerPage from './employer-ui';
+import useAuth from '@/hooks/use-auth';
 
 const job: Job = {
   title: 'Software Engineer',
@@ -26,9 +28,6 @@ const job: Job = {
   salary: 32,
   description:
     'Lorem ipsum dolor sit amet ctetur adipisicing elit. Voluptatem, alias. Quas, quae. Quisquam, Lorem ipsum dolor sit amet ctetur adipisicing elit. Voluptatem, alias. Quas, quae. Quisquam, voluptat',
-  requirement:
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, alias. Quas, quae. Quisquam, voluptate',
-  benefit: 'something',
   status: 'active',
   level: 'Intern',
   company: {
@@ -146,19 +145,24 @@ const SkillsSection = ({ tempValue, setTempValue }: any) => {
 
 function ProfilePage() {
   const { id } = useParams();
-  const [editing, setEditing] = useState<string | null>(null);
+
+  const auth = useAuth();
+  const isOwner = auth?.user?.id === id;
+  const { toast } = useToast();
+
   const [data, setData] = useState({
     name: 'Marshal',
     job: 'Developer',
     location: 'Vietnam',
     experience: 5,
-    about:
+    description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam, voluptate',
     skills: ['javascript', 'html', 'css'],
     experiences: [experience, experience],
     role: 'applicant',
+    jobs: [],
   });
-  const { toast } = useToast();
+  const [editing, setEditing] = useState<string | null>(null);
 
   const [companies, setCompanies] = useState([]);
 
@@ -170,7 +174,10 @@ function ProfilePage() {
       ]);
 
       setCompanies(companiesRes.data.data.content);
-      setData({ ...userDetailRes.data.data, skills: userDetailRes.data.data?.skills?.split(',') });
+      setData({
+        ...userDetailRes.data.data,
+        skills: userDetailRes.data.data.skills ? userDetailRes.data.data?.skills?.split(',') : [],
+      });
 
       console.log(userDetailRes);
     };
@@ -187,7 +194,7 @@ function ProfilePage() {
         submitData.skills = data.skills.toString();
       }
 
-      const res = await userApi.updateProfile(submitData, '69ef218b-1f26-4193-a6f6-9e45e9170b14');
+      const res = await userApi.updateProfile(submitData, id ? id : '');
 
       toast({
         title: 'Update profile successfully',
@@ -224,125 +231,18 @@ function ProfilePage() {
   return (
     <div className="max-w-screen-lg w-screen mx-auto px-2">
       <div className="w-full max-w-full">
-        <div className="bg-red-300 h-32 relative mb-16">
-          <div className="absolute -bottom-12 left-4">
-            <UserAvatar size="large" avatarUrl="https://github.com/shadcn.png" type="employer" />
-          </div>
-        </div>
-
-        {/* Info */}
-        <h2 className="font-bold text-[28px] my-1">{data.name}</h2>
-
-        <EditableSection
-          isEditing={editing === 'info'}
-          initialValue={{
-            job: data.job,
-            location: data.location,
-            yearExperience: data.experience,
-          }}
-          renderViewing={() => (
-            <div>
-              {data.job && (
-                <div className="flex items-center gap-2">
-                  <BriefcaseBusiness size={24} />
-                  <h1>Job title: {data.job}</h1>
-                </div>
-              )}
-
-              {data.location && (
-                <div className="flex items-center gap-2 my-1">
-                  <Building2 size={24} />
-                  <h1>Location: {data.location}</h1>
-                </div>
-              )}
-
-              {data.experience && (
-                <div className="flex items-center gap-2 my-1">
-                  <Calendar size={24} />
-                  <h1>Experience: {data.experience} years</h1>
-                </div>
-              )}
-            </div>
-          )}
-          renderEditing={(tempValue, setTempValue) => <InfoSection tempValue={tempValue} setTempValue={setTempValue} />}
-          handleCancel={() => setEditing(null)}
-          handleSave={handleUpdateProfile}
-          handleEdit={() => setEditing('info')}
-        />
-
-        <Separator className="my-8" />
-
-        <Tabs defaultValue="about">
-          <TabsList>
-            <TabsTrigger value="about" className="text-md font-bold">
-              About
-            </TabsTrigger>
-            <TabsTrigger value="jobs" className="text-md font-bold">
-              Jobs
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="about">About</TabsContent>
-          <TabsContent value="jobs">
-            <JobList jobs={[job, job, job]} />
-          </TabsContent>
-        </Tabs>
-
-        <EditableSection
-          isEditing={editing === 'about'}
-          initialValue={{ about: data.about }}
-          renderViewing={() => (
-            <div>
-              <h2 className="font-bold text-[24px] my-1">About</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit . Voluptatem, alias. Quas, quae. Quisquam,
-                voluptate
-              </p>
-            </div>
-          )}
-          renderEditing={(tempValue, setTempValue) => (
-            <div>
-              <h2 className="font-bold text-[24px] my-1">About</h2>
-              <textarea
-                className="w-full h-32 outline-black focus:outline-none border-solid border-[2px] border-black p-2 rounded-sm resize-none"
-                defaultValue={tempValue.about}
-                onChange={(e) => setTempValue(e.target.value)}
-              />
-            </div>
-          )}
-          handleCancel={() => setEditing(null)}
-          handleSave={handleUpdateProfile}
-          handleEdit={() => setEditing('about')}
-        />
-
-        <Separator className="my-8" />
-
-        <EditableSection
-          isEditing={editing === 'skills'}
-          initialValue={{ skills: data.skills }}
-          renderViewing={() => (
-            <div>
-              <h2 className="font-bold text-[24px] my-1">Skills</h2>
-              <p className="flex gap-2 flex-wrap">
-                {data.skills.map((skill, index) => (
-                  <span key={index} className="min-w-8 text-center text-sm bg-black text-white py-1 px-2 rounded-full">
-                    {skill.trim()}
-                  </span>
-                ))}
-              </p>
-            </div>
-          )}
-          renderEditing={(tempValue, setTempValue) => (
-            <SkillsSection tempValue={tempValue} setTempValue={setTempValue} />
-          )}
-          handleCancel={() => setEditing(null)}
-          handleSave={handleUpdateProfile}
-          handleEdit={() => setEditing('skills')}
-        />
-
-        <Separator className="my-8" />
-
-        {/* Experience */}
-        <UserExperienceSection experiences={data.experiences} companies={companies} onSubmit={handleUpdateExperience} />
+        {data.role === Roles.CANDIDATE && (
+          <ApplicantPage
+            data={data}
+            handleUpdateProfile={handleUpdateProfile}
+            companies={companies}
+            handleUpdateExperience={handleUpdateExperience}
+            isOwner={isOwner}
+          />
+        )}
+        {data.role === Roles.EMPLOYER && (
+          <EmployerPage data={data} handleUpdateProfile={handleUpdateProfile} isOwner={isOwner} />
+        )}
       </div>
     </div>
   );

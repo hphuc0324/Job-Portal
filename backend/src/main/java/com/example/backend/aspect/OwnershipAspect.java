@@ -23,6 +23,7 @@ public class OwnershipAspect {
     @Before("@annotation(isProfileOwner)")
     public void checkProfileOwner(JoinPoint joinPoint, IsProfileOwner isProfileOwner) throws Throwable {
         String authenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(authenticatedUsername);
         Optional<User> authenticatedUser = userRepository.findByEmail(authenticatedUsername);
 
         if(authenticatedUser.isEmpty()) {
@@ -38,6 +39,7 @@ public class OwnershipAspect {
         for(int i = 0; i < paramNames.length; i++) {
             if(paramNames[i].equals(idParamName)) {
                 if(!authenticatedUser.get().getId().equals(args[i])) {
+                    System.out.println("agrs::"+args[i]);
                     throw new RuntimeException("User not owned");
                 }
                 return;

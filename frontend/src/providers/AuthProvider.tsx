@@ -3,7 +3,7 @@ import authApi from '@/apis/auth-api';
 import { LoginFormSchemaType } from '@/types/schemas/login';
 import { RegisterFormSchemaType } from '@/types/schemas/register';
 import axios, { AxiosError } from 'axios';
-import { createContext, ReactNode, useLayoutEffect, useState } from 'react';
+import { createContext, ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 
 interface User {
   id: string;
@@ -148,6 +148,13 @@ function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       axiosClient.interceptors.response.eject(refreshInterceptor);
     };
+  }, []);
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      setUser(JSON.parse(user));
+    }
   }, []);
 
   return (

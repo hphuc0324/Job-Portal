@@ -46,8 +46,11 @@ public class Job {
     @Column(name = "slug")
     private String slug;
 
-    @Column(name = "meeting_schedule")
-    private Instant meetingSchedule;
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "status")
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "level_id", referencedColumnName = "id")
@@ -58,6 +61,6 @@ public class Job {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    private User company;
 }

@@ -11,7 +11,6 @@ import com.example.backend.service.ExperienceService;
 import com.example.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -132,7 +131,7 @@ public class UserController {
         UserFilterDTO filter = UserFilterDTO.builder()
                 .name(name)
                 .location(location)
-                .yearExperience(experience)
+                .experience(experience)
                 .roleName(role)
                 .build();
 

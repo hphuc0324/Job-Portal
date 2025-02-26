@@ -27,8 +27,6 @@ export interface Job {
   type: 'fulltime' | 'partime';
   salary: number;
   description: string;
-  requirement: string;
-  benefit: string;
   status: string;
   level: string;
   experience: number;
