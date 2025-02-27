@@ -172,12 +172,12 @@ function UserExperienceSection({ experiences, companies, onSubmit, allowEdit = f
   };
 
   const handleRemoveExperience = async (index: number) => {
-    const temp = tempValue.filter((experience, i) => i !== index);
+    const temp = tempValue.filter((_, i) => i !== index);
 
     setTempValue(temp);
 
     await onSubmit(temp);
-    // setIsEditing(null);
+    setIsEditing(null);
   };
 
   return (

@@ -5,14 +5,11 @@ import SocialCallback from '@/pages/auth-pages/social-callback';
 import { Outlet } from 'react-router-dom';
 import PrivateRoute from '@/components/router-component/private-route';
 import UnauthorizedRoute from '@/components/router-component/unauthrozied-route';
+import DefaultLayout from '@/components/layouts/default-layout';
 
 export const publicRoutes = [
   {
-    element: (
-      <>
-        default layout <Outlet />
-      </>
-    ),
+    element: <DefaultLayout />,
     children: [
       {
         index: true,
