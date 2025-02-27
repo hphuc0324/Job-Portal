@@ -56,8 +56,6 @@ function ProfilePage() {
         ...userDetailRes.data.data,
         skills: userDetailRes.data.data.skills ? userDetailRes.data.data?.skills?.split(',') : [],
       });
-
-      console.log(userDetailRes);
     };
 
     fetchData();

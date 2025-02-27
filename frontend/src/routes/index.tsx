@@ -1,11 +1,12 @@
 import LoginPage from '@/pages/auth-pages/login';
-import ProfilePage from '@/pages/personal-page/profile';
+import ProfilePage from '@/pages/personal-pages/profile';
 import RegisterPage from '@/pages/auth-pages/register';
 import SocialCallback from '@/pages/auth-pages/social-callback';
 import { Outlet } from 'react-router-dom';
 import PrivateRoute from '@/components/router-component/private-route';
 import UnauthorizedRoute from '@/components/router-component/unauthrozied-route';
 import DefaultLayout from '@/components/layouts/default-layout';
+import JobDetailsPage from '@/pages/common-pages/job-details';
 
 export const publicRoutes = [
   {
@@ -33,6 +34,10 @@ export const publicRoutes = [
             element: <>profile</>,
           },
         ],
+      },
+      {
+        path: '/job/:slug',
+        element: <JobDetailsPage />,
       },
     ],
   },

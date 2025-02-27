@@ -57,58 +57,70 @@ function DesktopBar() {
           </div>
         </div>
 
-        <div className="w-32 flex items-center gap-3">
-          <Popover>
-            <PopoverTrigger asChild>
-              {/* <UserAvatar size="tiny" type="applicant" avatarUrl="https://github.com/shadcn.png" /> */}
-              <button>
-                <UserAvatar size="tiny" type="applicant" avatarUrl="https://github.com/shadcn.png" />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="px-0 py-1 w-48">
-              <div className="cursor-pointer text-md rounded-sm hover:bg-[#ececec] p-2">Profile</div>
+        {isAuthenticated && (
+          <div className="w-32 flex items-center gap-3">
+            <Popover>
+              <PopoverTrigger asChild>
+                {/* <UserAvatar size="tiny" type="applicant" avatarUrl="https://github.com/shadcn.png" /> */}
+                <button>
+                  <UserAvatar size="tiny" type="applicant" avatarUrl="https://github.com/shadcn.png" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="px-0 py-1 w-48">
+                <div className="cursor-pointer text-md rounded-sm hover:bg-[#ececec] p-2">Profile</div>
 
-              <Separator className="h-[1px] bg-[rgba(0,0,0,0.1)] my-2" />
-              <div className="cursor-pointer text-md rounded-sm hover:bg-[#ececec] p-2">Log out</div>
-            </PopoverContent>
-          </Popover>
+                <Separator className="h-[1px] bg-[rgba(0,0,0,0.1)] my-2" />
+                <div className="cursor-pointer text-md rounded-sm hover:bg-[#ececec] p-2">Log out</div>
+              </PopoverContent>
+            </Popover>
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <button className="w-10 h-10 p-2 rounded-full text-center text-white border-solid border-[1px] border-white">
-                <Bell />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="px-2 py-1 w-72">
-              <Notification
-                image="https://github.com/shadcn.png"
-                content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
-                time={new Date()}
-              />
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="w-10 h-10 p-2 rounded-full text-center text-white border-solid border-[1px] border-white">
+                  <Bell />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="px-2 py-1 w-72">
+                <Notification
+                  image="https://github.com/shadcn.png"
+                  content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
+                  time={new Date()}
+                />
 
-              <Notification
-                type="success"
-                content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
-                time={new Date()}
-              />
+                <Notification
+                  type="success"
+                  content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
+                  time={new Date()}
+                />
 
-              <Notification
-                type="warning"
-                content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
-                time={new Date()}
-              />
+                <Notification
+                  type="warning"
+                  content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
+                  time={new Date()}
+                />
 
-              <Notification
-                type="error"
-                content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
-                time={new Date()}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+                <Notification
+                  type="error"
+                  content="Some notification for you sssssss ahifdaisd adih[ daosasss  adhi asidh"
+                  time={new Date()}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
+
+        {!isAuthenticated && (
+          <div className="flex gap-3 px-8">
+            <Link className="py-3 px-5 rounded-md bg-[#c3ee8d] text-sm font-semibold" to="/auth/login">
+              Sign in
+            </Link>
+            <Link className="py-3 px-5 rounded-md bg-[#fea64a] text-sm font-semibold" to="/auth/register">
+              Register
+            </Link>
+          </div>
+        )}
       </div>
       <Separator className="h-[0.5px] bg-[#818080]" />
-      <div className="h-16 bg-black"></div>
     </div>
   );
 }

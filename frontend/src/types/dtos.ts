@@ -6,7 +6,7 @@ export interface User {
   experience?: string;
   avatarUrl?: string;
   role: string;
-  about?: string;
+  description?: string;
   skills?: string;
 }
 
