@@ -71,7 +71,7 @@ const InfoSection = ({ tempValue, setTempValue }: any) => {
         <Input
           id="job"
           placeholder="Job title"
-          value={tempValue.job}
+          value={tempValue.job || ''}
           onChange={(e) => setTempValue({ ...tempValue, job: e.target.value })}
           className="border-solid border-black border-[1px] "
         />
@@ -82,7 +82,7 @@ const InfoSection = ({ tempValue, setTempValue }: any) => {
         <Input
           id="location"
           placeholder="Location"
-          value={tempValue.location}
+          value={tempValue.location || ''}
           onChange={(e) => setTempValue({ ...tempValue, location: e.target.value })}
           className="border-solid border-black border-[1px] "
         />
@@ -93,9 +93,9 @@ const InfoSection = ({ tempValue, setTempValue }: any) => {
         <Input
           id="yearExperience"
           placeholder="Year of experience"
-          value={tempValue.yearExperience}
+          value={tempValue.experience || 0}
           type="number"
-          onChange={(e) => setTempValue({ ...tempValue, yearExperience: e.target.value })}
+          onChange={(e) => setTempValue({ ...tempValue, experience: e.target.value })}
           className="border-solid border-black border-[1px] "
         />
       </div>
@@ -114,7 +114,7 @@ interface ApplicantPageProps {
 function ApplicantPage({ data, handleUpdateProfile, companies, handleUpdateExperience, isOwner }: ApplicantPageProps) {
   const [editing, setEditing] = useState<string | null>(null);
 
-  console.log(data);
+  console.log(data.experience);
 
   return (
     <div>

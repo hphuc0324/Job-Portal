@@ -1,15 +1,16 @@
 import axiosClient, { CustomAxiosRequestConfig } from '@/apis/api-client';
 import authApi from '@/apis/auth-api';
 import { LoginFormSchemaType } from '@/types/schemas/login';
-import { RegisterFormSchemaType } from '@/types/schemas/register';
-import axios, { AxiosError } from 'axios';
-import { createContext, ReactNode, useEffect, useLayoutEffect, useState } from 'react';
+import { RegisterFormSchemaType, Roles } from '@/types/schemas/register';
+import { AxiosError } from 'axios';
+import { createContext, ReactNode, useLayoutEffect, useState } from 'react';
 
 interface User {
   id: string;
   name: string;
   email: string;
   avatarUrl?: string;
+  role: Roles;
 }
 
 interface AuthError {
@@ -28,7 +29,9 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(
+    localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') ?? '{}') : null,
+  );
   const [error, setError] = useState<AuthError | null>(null);
 
   const login = async (data: LoginFormSchemaType) => {
@@ -148,13 +151,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       axiosClient.interceptors.response.eject(refreshInterceptor);
     };
-  }, []);
-
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setUser(JSON.parse(user));
-    }
   }, []);
 
   return (

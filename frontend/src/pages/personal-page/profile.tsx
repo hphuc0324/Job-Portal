@@ -1,41 +1,15 @@
 import { useParams } from 'react-router-dom';
-import { BriefcaseBusiness, Building2, Calendar } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { X } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import UserAvatar from '@/components/user-avatar';
-import JobList from '@/components/job-list';
+
 import { useEffect, useState } from 'react';
-import EditableSection from '@/components/editable-section';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+
 import { AxiosError } from 'axios';
 import userApi from '@/apis/user-api';
 import { useToast } from '@/hooks/use-toast';
 import { Roles } from '@/types/schemas/register';
 import { Experience } from '@/types/dtos';
-import { Job } from '@/types/dtos';
 import ApplicantPage from './applicant-ui';
 import EmployerPage from './employer-ui';
 import useAuth from '@/hooks/use-auth';
-
-const job: Job = {
-  title: 'Software Engineer',
-  location: 'Vietnam',
-  experience: 5,
-  slug: 'software-engineer',
-  type: 'partime',
-  salary: 32,
-  description:
-    'Lorem ipsum dolor sit amet ctetur adipisicing elit. Voluptatem, alias. Quas, quae. Quisquam, Lorem ipsum dolor sit amet ctetur adipisicing elit. Voluptatem, alias. Quas, quae. Quisquam, voluptat',
-  status: 'active',
-  level: 'Intern',
-  company: {
-    id: '09df2327-a1e3-4f90-a8b4-728e3039eaa4',
-    name: 'Google',
-    role: Roles.EMPLOYER,
-  },
-};
 
 const experience: Experience = {
   role: 'Developer',

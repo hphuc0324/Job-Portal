@@ -3,6 +3,8 @@ import ProfilePage from '@/pages/personal-page/profile';
 import RegisterPage from '@/pages/auth-pages/register';
 import SocialCallback from '@/pages/auth-pages/social-callback';
 import { Outlet } from 'react-router-dom';
+import PrivateRoute from '@/components/router-component/private-route';
+import UnauthorizedRoute from '@/components/router-component/unauthrozied-route';
 
 export const publicRoutes = [
   {
@@ -39,6 +41,7 @@ export const publicRoutes = [
   },
   {
     path: '/auth',
+    element: <UnauthorizedRoute />,
     children: [
       {
         path: 'login',
@@ -56,7 +59,13 @@ export const publicRoutes = [
   },
   {
     path: '/profile/:id',
-    element: <ProfilePage />,
+    element: <PrivateRoute />,
+    children: [
+      {
+        index: true,
+        element: <ProfilePage />,
+      },
+    ],
   },
 ];
 

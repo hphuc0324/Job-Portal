@@ -44,7 +44,7 @@ const ExperienceEditor = ({
             id="role"
             placeholder="Role"
             onChange={(e) => setExperience(index, 'role', e.target.value)}
-            value={experience.role}
+            value={experience.role || ''}
             className="border-solid border-black border-[1px] w-full"
           />
         </div>
@@ -54,7 +54,7 @@ const ExperienceEditor = ({
             id="location"
             placeholder="Location"
             onChange={(e) => setExperience(index, 'location', e.target.value)}
-            value={experience.location}
+            value={experience.location || ''}
             className="border-solid border-black border-[1px] "
           />
         </div>

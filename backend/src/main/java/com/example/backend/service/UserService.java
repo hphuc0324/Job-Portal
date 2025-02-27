@@ -94,6 +94,11 @@ public class UserService {
                 .email(userRegisterDTO.getEmail())
                 .password(passwordEncoder.encode(userRegisterDTO.getPassword()))
                 .avatarUrl(userRegisterDTO.getAvatarUrl())
+                .experience(0)
+                .description("")
+                .location("")
+                .skills("")
+                .job("")
                 .role(role.get())
                 .status("active")
                 .experience(0)
@@ -212,6 +217,7 @@ public class UserService {
 
         User user = foundUser.get();
         UserDetailsDTO userDetailsDTO = userMapper.toUserDetailsDTO(user);
+        System.out.println(user);
 
         if(user.getRole().getRoleName().equals("applicant")){
             List<Experience> experiences = experienceService.getAllExperiences(user.getId());

@@ -24,8 +24,6 @@ function EditableSection({
 }: EditableSectionProps) {
   const [tempValue, setTempValue] = useState(initialValue);
 
-  console.log(isEditing);
-
   useLayoutEffect(() => {
     if (isEditing) {
       setTempValue(initialValue);
