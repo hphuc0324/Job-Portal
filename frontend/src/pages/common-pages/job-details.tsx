@@ -1,9 +1,10 @@
 import JobList from '@/components/job-list';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import UserAvatar from '@/components/user-avatar';
 import { Job } from '@/types/dtos';
 import { Roles } from '@/types/schemas/register';
-import { Dot, MapPin, BriefcaseBusiness, CircleDollarSign, Clock } from 'lucide-react';
+import { Dot, MapPin, BriefcaseBusiness, CircleDollarSign, Clock, Bookmark, Book } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const job: Job = {
@@ -34,7 +35,7 @@ function JobDetailsPage() {
       <div className="w-full max-w-[70%]">
         <div className="flex items-center gap-2">
           <UserAvatar size="medium" type="employer" />
-          <div className="space-y-1">
+          <div className="space-y-1 flex-1">
             <p className="font-bold text-xl">{job.title}</p>
             <div className="flex">
               <span className="block">{job.company.name}</span>
@@ -42,13 +43,22 @@ function JobDetailsPage() {
               <span className="block">{job.location}</span>
             </div>
           </div>
+
+          <div className="flex gap-3">
+            <Button className="w-24 h-12" variant="third">
+              Apply
+            </Button>
+            <Button className="w-12 h-12" variant="outline">
+              <Bookmark className="h-8 w-8" />
+            </Button>
+          </div>
         </div>
 
         <Separator className="w-full my-8" />
 
         <div className="flex justify-between">
           <div className="flex flex-col items-center">
-            <div className="w-12 h-12 p-2 rounded-full bg-gray-400">
+            <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
               <MapPin className="w-8 h-8" />
             </div>
             <span className="block text-gray-400">Location</span>
@@ -56,7 +66,7 @@ function JobDetailsPage() {
           </div>
 
           <div className="flex flex-col items-center">
-            <div className="w-12 h-12 p-2 rounded-full bg-gray-400">
+            <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
               <BriefcaseBusiness className="w-8 h-8" />
             </div>
             <span className="block text-gray-400">Level</span>
@@ -64,7 +74,7 @@ function JobDetailsPage() {
           </div>
 
           <div className="flex flex-col items-center">
-            <div className="w-12 h-12 p-2 rounded-full bg-gray-400">
+            <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
               <CircleDollarSign className="w-8 h-8" />
             </div>
             <span className="block text-gray-400">Salary</span>
@@ -72,7 +82,7 @@ function JobDetailsPage() {
           </div>
 
           <div className="flex flex-col items-center">
-            <div className="w-12 h-12 p-2 rounded-full bg-gray-400">
+            <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
               <Clock className="w-8 h-8" />
             </div>
             <span className="block text-gray-400">Type</span>
@@ -106,7 +116,7 @@ function JobDetailsPage() {
             <p className="font-semibold text-[18px]">{job.company.name}</p>
             <p className="text-xs font-semibold text-gray-500">{job.company.location}</p>
           </div>
-          <Link className="p-2 bg-red-300 rounded-md" to={job.company.id}>
+          <Link className="p-2 font-semibold bg-yellow-500 rounded-md text-white" to={job.company.id}>
             Company page
           </Link>
         </div>

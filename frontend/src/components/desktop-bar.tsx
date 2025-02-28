@@ -1,5 +1,5 @@
 import useAuth from '@/hooks/use-auth';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Separator } from '@radix-ui/react-separator';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
@@ -9,7 +9,7 @@ import Notification from './notification';
 
 function DesktopBar() {
   const auth = useAuth();
-  const path = window.location.pathname;
+  const path = useLocation().pathname;
 
   const isAuthenticated = auth?.user;
 
@@ -26,34 +26,34 @@ function DesktopBar() {
           <div
             className={cn(
               'h-full px-3 flex items-center',
-              path.includes('search') && 'border-b-2 border-solid border-white ',
+              path.includes('/search/jobs') && 'border-b-2 border-solid border-white ',
             )}
           >
-            <Link to="/job">Find jobs</Link>
+            <Link to="/search/jobs">Find jobs</Link>
           </div>
           <div
             className={cn(
               'h-full px-3 flex items-center',
-              path.includes('search') && 'border-b-2 border-solid border-white ',
+              path.includes('/seach/talents') && 'border-b-2 border-solid border-white ',
             )}
           >
-            <Link to="/job">Find talents</Link>
+            <Link to="/seach/talents">Find talents</Link>
           </div>
           <div
             className={cn(
               'h-full px-3 flex items-center',
-              path.includes('search') && 'border-b-2 border-solid border-white ',
+              path.includes('/post-job') && 'border-b-2 border-solid border-white ',
             )}
           >
-            <Link to="/job">Post job</Link>
+            <Link to="/post-job">Post job</Link>
           </div>
           <div
             className={cn(
               'h-full px-3 flex items-center',
-              path.includes('search') && 'border-b-2 border-solid border-white ',
+              path.includes('/about') && 'border-b-2 border-solid border-white ',
             )}
           >
-            <Link to="/job">About us</Link>
+            <Link to="/about">About us</Link>
           </div>
         </div>
 

@@ -7,6 +7,7 @@ import PrivateRoute from '@/components/router-component/private-route';
 import UnauthorizedRoute from '@/components/router-component/unauthrozied-route';
 import DefaultLayout from '@/components/layouts/default-layout';
 import JobDetailsPage from '@/pages/common-pages/job-details';
+import SearchJobsPage from '@/pages/common-pages/search-jobs';
 
 export const publicRoutes = [
   {
@@ -15,6 +16,15 @@ export const publicRoutes = [
       {
         index: true,
         element: <>home</>,
+      },
+      {
+        path: '/search',
+        children: [
+          {
+            path: 'jobs',
+            element: <SearchJobsPage />,
+          },
+        ],
       },
       {
         path: '/dashboard',
