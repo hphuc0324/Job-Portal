@@ -17,6 +17,8 @@ const useJobFilters = () => {
   const level = searchParams.get('level') as JobFilter['level'];
   const categories = getArrayParams('categories') as string[];
   const type = getArrayParams('type') as string[];
+  const page = searchParams.get('page');
+  const limit = searchParams.get('limit');
 
   const setFilters = useCallback((filter: JobFilter) => {
     setSearchParams((params) => {
@@ -78,6 +80,10 @@ const useJobFilters = () => {
     level,
     type,
     categories,
+    pagination: {
+      page: page ? parseInt(page) : 0,
+      limit: limit ? parseInt(limit) : 5,
+    },
     setFilters,
   };
 };

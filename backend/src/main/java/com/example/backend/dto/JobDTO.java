@@ -18,4 +18,5 @@ public class JobDTO {
     private UserDTO company;
     private String type;
     private String level;
+    private String category;
 }

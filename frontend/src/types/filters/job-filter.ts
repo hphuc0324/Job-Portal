@@ -1,3 +1,5 @@
+import PaginationFilter from './pagination-filter';
+
 export default interface JobFilter {
   title?: string;
   location?: string;
@@ -6,4 +8,5 @@ export default interface JobFilter {
   level?: string;
   categories?: string[];
   type?: string[];
+  pagination?: PaginationFilter;
 }

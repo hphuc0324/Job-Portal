@@ -21,6 +21,7 @@ public interface UserMapper {
     @Mapping(target = "experience", ignore = true)
     void updateEmployer(UserUpdateDTO from, @MappingTarget User to);
 
+    @Named("toUserDTO")
     @Mapping(source = "role.roleName", target = "role")
     UserDTO toUserDTO(User user);
 

@@ -5,9 +5,24 @@ import useJobFilters from '@/hooks/use-job-filters';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useEffect, useState } from 'react';
+import { AxiosError } from 'axios';
+import jobApi from '@/apis/job-api';
+import { Job } from '@/types/dtos';
+import JobList from '@/components/job-list';
 
 function SearchJobsPage() {
-  const { title, location, minSalary, maxSalary, level, categories, type, setFilters } = useJobFilters();
+  const { title, location, minSalary, maxSalary, level, categories, type, pagination, setFilters } = useJobFilters();
+  const [jobData, setJobData] = useState<{
+    jobs: Job[];
+    isLoading: boolean;
+    totalPages: number;
+  }>({
+    jobs: [],
+    isLoading: false,
+    totalPages: 0,
+  });
+
   const clearFilters = () => {
     setFilters({
       title: '',
@@ -17,16 +32,53 @@ function SearchJobsPage() {
       level: '',
       categories: [],
       type: [],
+      pagination: {
+        page: 0,
+        limit: 5,
+      },
     });
   };
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setJobData((prev) => ({ ...prev, isLoading: true }));
+        const res = await jobApi.getJob({
+          title,
+          location,
+          minSalary,
+          maxSalary,
+          level,
+          categories,
+          type,
+          pagination: {
+            page: pagination.page,
+            limit: pagination.limit,
+          },
+        });
+
+        // setJobData({
+        //   jobs: res.data.data.content as Job[],
+        //   isLoading: false,
+        //   totalPages: res.data.data.totalPages,
+        // });
+      } catch (error: AxiosError | any) {
+        console.error('Error fetching jobs:', error.message);
+      }
+    };
+
+    if (!jobData.isLoading) {
+      fetchJobs();
+    }
+  }, [title, location, minSalary, maxSalary, level, categories, type, pagination.page, pagination.limit]);
 
   return (
     <div className="bg-[#f0f5f9] w-screen">
       <SearchJobBar title={title} location={location} setFilters={setFilters} />
       <div className="p-8 w-full max-w-screen-xl mx-auto">
         <h2 className="font-semibold text-2xl">Recommended Jobs</h2>
-        <div className="flex w-full gap-4">
-          <div className="flex-1">
+        <div className="flex w-full gap-12">
+          <div>
             {/* Job type */}
             <div className="my-8">
               <div className="flex items-center justify-between">
@@ -90,7 +142,6 @@ function SearchJobsPage() {
                 </label>
               </div>
             </div>
-
             {/* Job salary */}
             <div className="my-8 w-full">
               <h3 className="font-semibold text-lg my-4">Salary Range</h3>
@@ -105,7 +156,6 @@ function SearchJobsPage() {
                 labelPosition="bottom"
               />
             </div>
-
             <div className="my-8">
               <h3 className="font-semibold text-lg my-4">Job Categories</h3>
               <div className="flex items-center space-x-2 my-3">
@@ -136,7 +186,6 @@ function SearchJobsPage() {
                 </label>
               </div>
             </div>
-
             <div className="my-8">
               <h3 className="font-semibold text-lg my-4">Level</h3>
               <RadioGroup onValueChange={(value) => setFilters({ level: value })} defaultValue="option-one">
@@ -151,7 +200,9 @@ function SearchJobsPage() {
               </RadioGroup>
             </div>
           </div>
-          <div className="w-[80%]"></div>
+          <div className="my-8 flex-1">
+            <JobList jobs={jobData.jobs} />
+          </div>
         </div>
       </div>
     </div>

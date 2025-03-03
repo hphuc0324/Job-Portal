@@ -203,7 +203,6 @@ public class UserService {
 
         Page<User> users =  userRepository.findAll(specification, pageable);
 
-        System.out.println(users.getContent().size());
         return users.map(userMapper::toUserDTO);
     }
 
