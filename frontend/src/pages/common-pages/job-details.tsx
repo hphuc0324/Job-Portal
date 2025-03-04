@@ -1,10 +1,12 @@
 import JobList from '@/components/job-list';
+import Editor from '@/components/richtext-editor/editor';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import UserAvatar from '@/components/user-avatar';
 import { Job } from '@/types/dtos';
 import { Roles } from '@/types/schemas/register';
-import { Dot, MapPin, BriefcaseBusiness, CircleDollarSign, Clock, Bookmark, Book } from 'lucide-react';
+import { Dot, MapPin, BriefcaseBusiness, CircleDollarSign, Clock, Bookmark } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const job: Job = {
@@ -30,6 +32,12 @@ const job: Job = {
 };
 
 function JobDetailsPage() {
+  const [description, setDescription] = useState<string>(
+    '{"type":"doc","content":[{"type":"bulletList","content":[{"type":"listItem","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","marks":[{"type":"bold"}],"text":"Hello World!"}]}]}]}]}',
+  );
+
+  console.log(description);
+
   return (
     <div className="w-screen max-w-screen-xl mx-auto p-8 flex gap-8">
       <div className="w-full max-w-[70%]">
@@ -94,7 +102,7 @@ function JobDetailsPage() {
 
         <div className="my-8">
           <h2 className="font-bold text-[24px] my-1">About the job</h2>
-          <p>{job.description}</p>
+          <Editor value={description} onChange={(value) => setDescription(value)} />
         </div>
 
         <div className="my-8">
