@@ -4,7 +4,7 @@ import axiosClient from './api-client';
 const baseUrl = '/job';
 
 const jobApi = {
-  getJob: (filter: JobFilter) => {
+  getJob: (filter: JobFilter, page: number, limit: number) => {
     const queryParams = new URLSearchParams();
     if (filter.title) {
       queryParams.append('title', filter.title);

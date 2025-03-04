@@ -28,12 +28,12 @@ public class JobSpecification {
                 predicates.add(cb.equal(root.get("level").get("slug"), filter.getLevel()));
             }
 
-            if(filter.getMinPrice() != null){
-                predicates.add(cb.greaterThanOrEqualTo(root.get("salary"), filter.getMinPrice()));
+            if(filter.getMinSalary() != null){
+                predicates.add(cb.greaterThanOrEqualTo(root.get("salary"), filter.getMinSalary()));
             }
 
-            if(filter.getMaxPrice() != null){
-                predicates.add(cb.lessThanOrEqualTo(root.get("salary"), filter.getMaxPrice()));
+            if(filter.getMaxSalary() != null){
+                predicates.add(cb.lessThanOrEqualTo(root.get("salary"), filter.getMaxSalary()));
             }
 
             if(filter.getCategories() != null){

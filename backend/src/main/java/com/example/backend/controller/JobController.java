@@ -30,8 +30,8 @@ public class JobController {
             @RequestParam(name = "title", required = false) String title,
             @RequestParam(name = "location", required = false) String location,
             @RequestParam(name = "type", required = false) List<String> type,
-            @RequestParam(name = "minPrice", required = false) Integer minPrice,
-            @RequestParam(name = "maxPrice", required = false) Integer maxPrice,
+            @RequestParam(name = "minSalary", required = false) Integer minSalary,
+            @RequestParam(name = "maxSalary", required = false) Integer maxSalary,
             @RequestParam(name = "categories", required = false) List<String> categories,
             @RequestParam(name = "level", required = false) String level,
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
@@ -41,8 +41,8 @@ public class JobController {
                 .title(title)
                 .location(location)
                 .type(type)
-                .minPrice(minPrice)
-                .maxPrice(maxPrice)
+                .minSalary(minSalary)
+                .maxSalary(minSalary)
                 .categories(categories)
                 .level(level)
                 .build();

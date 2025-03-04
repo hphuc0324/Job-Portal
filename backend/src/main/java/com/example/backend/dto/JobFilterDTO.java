@@ -13,6 +13,6 @@ public class JobFilterDTO {
     private String level;
     private List<String> categories;
     private List<String> type;
-    private Integer minPrice;
-    private Integer maxPrice;
+    private Integer minSalary;
+    private Integer maxSalary;
 }

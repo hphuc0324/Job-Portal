@@ -10,6 +10,7 @@ import { AxiosError } from 'axios';
 import jobApi from '@/apis/job-api';
 import { Job } from '@/types/dtos';
 import JobList from '@/components/job-list';
+import { useToast } from '@/hooks/use-toast';
 
 function SearchJobsPage() {
   const { title, location, minSalary, maxSalary, level, categories, type, pagination, setFilters } = useJobFilters();
@@ -22,6 +23,7 @@ function SearchJobsPage() {
     isLoading: false,
     totalPages: 0,
   });
+  const { toast } = useToast();
 
   const clearFilters = () => {
     setFilters({
@@ -43,34 +45,47 @@ function SearchJobsPage() {
     const fetchJobs = async () => {
       try {
         setJobData((prev) => ({ ...prev, isLoading: true }));
-        const res = await jobApi.getJob({
-          title,
-          location,
-          minSalary,
-          maxSalary,
-          level,
-          categories,
-          type,
-          pagination: {
-            page: pagination.page,
-            limit: pagination.limit,
+        const res = await jobApi.getJob(
+          {
+            title,
+            location,
+            minSalary,
+            maxSalary,
+            level,
+            categories,
+            type,
           },
-        });
+          0,
+          5,
+        );
 
-        // setJobData({
-        //   jobs: res.data.data.content as Job[],
-        //   isLoading: false,
-        //   totalPages: res.data.data.totalPages,
-        // });
+        setJobData({
+          jobs: res.data.data.content as Job[],
+          isLoading: false,
+          totalPages: res.data.data.totalPages,
+        });
       } catch (error: AxiosError | any) {
         console.error('Error fetching jobs:', error.message);
+        toast({
+          title: 'Error fetching jobs',
+          description: error.message,
+          variant: 'destructive',
+        });
       }
     };
 
-    if (!jobData.isLoading) {
-      fetchJobs();
-    }
-  }, [title, location, minSalary, maxSalary, level, categories, type, pagination.page, pagination.limit]);
+    fetchJobs();
+  }, [
+    title,
+    location,
+    minSalary,
+    maxSalary,
+    level,
+    categories?.join(','),
+    type?.join(','),
+    pagination.page,
+    pagination.limit,
+  ]);
 
   return (
     <div className="bg-[#f0f5f9] w-screen">
