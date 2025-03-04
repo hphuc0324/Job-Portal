@@ -32,3 +32,16 @@ export interface Job {
   experience: number;
   company: User;
 }
+
+export interface Level {
+  id: string;
+  name: string;
+  description: string;
+  slug: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}

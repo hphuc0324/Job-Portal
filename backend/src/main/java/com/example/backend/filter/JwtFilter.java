@@ -93,7 +93,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/auth/social/callback", apiPrefix), "GET"),
                 Pair.of(String.format("%s/user/getAll", apiPrefix), "GET"),
                 Pair.of(String.format("%s/user/profile", apiPrefix), "GET"),
-                Pair.of(String.format("%s/job", apiPrefix), "GET")
+                Pair.of(String.format("%s/job", apiPrefix), "GET"),
+                Pair.of(String.format("%s/level", apiPrefix), "GET"),
+                Pair.of(String.format("%s/category", apiPrefix), "GET")
         );
 
         for (Pair<String, String> pair : bypass) {

@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import jobApi from '@/apis/job-api';
-import { Job } from '@/types/dtos';
+import { Category, Job, Level } from '@/types/dtos';
 import JobList from '@/components/job-list';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -19,10 +19,15 @@ import {
   PaginationNext,
 } from '@/components/ui/pagination';
 import { cn } from '@/lib/utils';
+import levelApi from '@/apis/level-api';
+import categoryApi from '@/apis/category-api';
 
 function SearchJobsPage() {
   const { title, location, minSalary, maxSalary, level, categories, type, pagination, setFilters } = useJobFilters();
-
+  const [filterData, setFilterData] = useState<{
+    levels: Level[];
+    category: Category[];
+  }>({ levels: [], category: [] });
   const [jobData, setJobData] = useState<{
     jobs: Job[];
     isLoading: boolean;
@@ -91,6 +96,19 @@ function SearchJobsPage() {
     pagination.page,
     pagination.limit,
   ]);
+
+  useEffect(() => {
+    const handleFetchData = async () => {
+      const [levelRes, categoryRes] = await Promise.all([levelApi.getAllLevels(), categoryApi.getAllCategories()]);
+
+      setFilterData({
+        category: categoryRes.data.data,
+        levels: levelRes.data.data,
+      });
+    };
+
+    handleFetchData();
+  }, []);
 
   const handleChangePage = (page: number) => {
     if (pagination.page === page) {
@@ -191,45 +209,38 @@ function SearchJobsPage() {
             </div>
             <div className="my-8">
               <h3 className="font-semibold text-lg my-4">Job Categories</h3>
-              <div className="flex items-center space-x-2 my-3">
-                <Checkbox id="terms" />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Full time
-                </label>
-              </div>
-              <div className="flex items-center space-x-2 my-3">
-                <Checkbox id="terms" />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Part time
-                </label>
-              </div>
-              <div className="flex items-center space-x-2 my-3">
-                <Checkbox id="terms" />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Volunteering
-                </label>
-              </div>
+              {filterData.category.map((category) => (
+                <div className="flex items-center space-x-2 my-3" key={category.id}>
+                  <Checkbox
+                    id={category.id}
+                    checked={categories?.includes(category.slug)}
+                    value={category.slug}
+                    onCheckedChange={(checked) =>
+                      setFilters({
+                        categories: checked
+                          ? [...categories, category.slug]
+                          : categories.filter((c) => c !== category.slug),
+                      })
+                    }
+                  />
+                  <label
+                    htmlFor="terms"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {category.name}
+                  </label>
+                </div>
+              ))}
             </div>
             <div className="my-8">
               <h3 className="font-semibold text-lg my-4">Level</h3>
               <RadioGroup onValueChange={(value) => setFilters({ level: value })} defaultValue="option-one">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="intern" id="option-one" checked={level === 'intern'} />
-                  <Label htmlFor="option-one">Intern</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="senior" id="option-two" checked={level === 'senior'} />
-                  <Label htmlFor="option-two">Senior</Label>
-                </div>
+                {filterData.levels.map((item) => (
+                  <div className="flex items-center space-x-2" key={item.id}>
+                    <RadioGroupItem value={item.slug} id={item.id} checked={level === item.slug} />
+                    <Label htmlFor={item.id}>{item.name}</Label>
+                  </div>
+                ))}
               </RadioGroup>
             </div>
           </div>
