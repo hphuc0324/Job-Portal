@@ -68,6 +68,14 @@ const useJobFilters = () => {
         });
       }
 
+      if (filter.pagination?.page && filter.pagination.page >= 0) {
+        params.set('page', filter.pagination.page.toString());
+      }
+
+      if (filter.pagination?.limit && filter.pagination.limit >= 0) {
+        params.set('limit', filter.pagination.limit.toString());
+      }
+
       return params;
     });
   }, []);

@@ -11,9 +11,18 @@ import jobApi from '@/apis/job-api';
 import { Job } from '@/types/dtos';
 import JobList from '@/components/job-list';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Pagination,
+  PaginationPrevious,
+  PaginationItem,
+  PaginationContent,
+  PaginationNext,
+} from '@/components/ui/pagination';
+import { cn } from '@/lib/utils';
 
 function SearchJobsPage() {
   const { title, location, minSalary, maxSalary, level, categories, type, pagination, setFilters } = useJobFilters();
+
   const [jobData, setJobData] = useState<{
     jobs: Job[];
     isLoading: boolean;
@@ -45,19 +54,15 @@ function SearchJobsPage() {
     const fetchJobs = async () => {
       try {
         setJobData((prev) => ({ ...prev, isLoading: true }));
-        const res = await jobApi.getJob(
-          {
-            title,
-            location,
-            minSalary,
-            maxSalary,
-            level,
-            categories,
-            type,
-          },
-          0,
-          5,
-        );
+        const res = await jobApi.getJob({
+          title,
+          location,
+          minSalary,
+          maxSalary,
+          level,
+          categories,
+          type,
+        });
 
         setJobData({
           jobs: res.data.data.content as Job[],
@@ -86,6 +91,19 @@ function SearchJobsPage() {
     pagination.page,
     pagination.limit,
   ]);
+
+  const handleChangePage = (page: number) => {
+    if (pagination.page === page) {
+      return;
+    }
+
+    setFilters({
+      pagination: {
+        ...pagination,
+        page: page,
+      },
+    });
+  };
 
   return (
     <div className="bg-[#f0f5f9] w-screen">
@@ -217,6 +235,42 @@ function SearchJobsPage() {
           </div>
           <div className="my-8 flex-1">
             <JobList jobs={jobData.jobs} />
+
+            <Pagination className="my-16">
+              <PaginationContent>
+                <PaginationItem>
+                  <button
+                    className="hover:bg-gray-300 rounded-sm disabled:opacity-50 disabled:hover:bg-transparent"
+                    disabled={pagination.page === 0}
+                  >
+                    <PaginationPrevious className="bg-transparent hover:bg-transparent">Previous</PaginationPrevious>
+                  </button>
+                </PaginationItem>
+                {Array.from({ length: jobData.totalPages }, (_, i) => (
+                  <PaginationItem className="mx-2" key={i}>
+                    <button
+                      disabled={pagination.page === i}
+                      onClick={() => handleChangePage(i)}
+                      className={cn(
+                        'hover:bg-gray-300 px-2.5 pb-1 rounded-sm ',
+                        pagination.page === i && 'outline-primary outline-1 outline-double',
+                      )}
+                    >
+                      {i + 1}
+                    </button>
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <button
+                    className="hover:bg-gray-300 rounded-sm disabled:opacity-50 disabled:hover:bg-transparent"
+                    disabled={pagination.page >= jobData.totalPages - 1}
+                  >
+                    <PaginationNext className="bg-transparent hover:bg-transparent">Next</PaginationNext>
+                  </button>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         </div>
       </div>
