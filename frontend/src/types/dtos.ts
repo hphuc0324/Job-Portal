@@ -21,12 +21,16 @@ export interface Experience {
 }
 
 export interface Job {
+  id: string;
   title: string;
   location: string;
   slug: string;
   type: 'fulltime' | 'partime';
   salary: number;
   description: string;
+  requirements: string;
+  benefit: string;
+  responsibility: string;
   status: string;
   level: string;
   experience: number;

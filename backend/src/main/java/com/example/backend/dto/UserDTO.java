@@ -18,4 +18,6 @@ public class UserDTO {
     private String avatarUrl;
 
     private String role;
+
+    private String description;
 }

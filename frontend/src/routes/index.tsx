@@ -8,6 +8,8 @@ import UnauthorizedRoute from '@/components/router-component/unauthrozied-route'
 import DefaultLayout from '@/components/layouts/default-layout';
 import JobDetailsPage from '@/pages/common-pages/job-details';
 import SearchJobsPage from '@/pages/common-pages/search-jobs';
+import PostJob from '@/pages/employer-pages/post-job';
+import { Roles } from '@/types/schemas/register';
 
 export const publicRoutes = [
   {
@@ -48,6 +50,16 @@ export const publicRoutes = [
       {
         path: '/job/:slug',
         element: <JobDetailsPage />,
+      },
+      {
+        path: '/post-job/:slug?',
+        element: <PrivateRoute allowedRoles={[Roles.CANDIDATE]} />,
+        children: [
+          {
+            index: true,
+            element: <PostJob />,
+          },
+        ],
       },
     ],
   },

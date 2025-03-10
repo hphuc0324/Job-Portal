@@ -14,4 +14,6 @@ public interface JobRepository extends JpaRepository<Job, UUID>, JpaSpecificatio
     boolean existsBySlug(String slug);
 
     List<Job> findAllByCompanyId(UUID companyId);
+
+    Optional<Job> findBySlug(String slug);
 }

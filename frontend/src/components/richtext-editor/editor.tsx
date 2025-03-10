@@ -26,7 +26,7 @@ function Editor({ value, onChange, editable = false }: EditorProps) {
   });
 
   return (
-    <div className={cn('max-w-full', editable && 'p-3 border-solid border-[1px] border-black rounded-md min-h-20')}>
+    <div className={cn('max-w-full', editable && 'p-3 border-solid border-[1px] border-black rounded-md min-h-60')}>
       {editor && editable && <EditorBar editor={editor} />}
       <EditorContent editor={editor} />
     </div>

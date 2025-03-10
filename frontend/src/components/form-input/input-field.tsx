@@ -9,6 +9,7 @@ interface InputFieldProps {
   placeholder?: string | undefined;
   icon?: React.ReactNode | undefined;
   classes?: string | undefined;
+  type?: React.HTMLInputTypeAttribute | undefined;
 }
 
 function InputField(props: InputFieldProps) {
@@ -20,7 +21,7 @@ function InputField(props: InputFieldProps) {
         <FormItem>
           <FormLabel>{props.label}</FormLabel>
           <FormControl>
-            <Input {...field} placeholder={props.placeholder} className={props.classes} />
+            <Input type={props.type || 'text'} {...field} placeholder={props.placeholder} className={props.classes} />
           </FormControl>
           <FormMessage />
         </FormItem>

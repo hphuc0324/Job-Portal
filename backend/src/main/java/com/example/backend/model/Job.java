@@ -43,6 +43,9 @@ public class Job {
     @Column(name = "benefit")
     private String benefit;
 
+    @Column(name = "responsibility")
+    private String responsibility;
+
     @Column(name = "slug")
     private String slug;
 

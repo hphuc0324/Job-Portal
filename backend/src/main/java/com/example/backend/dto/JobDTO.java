@@ -13,7 +13,10 @@ public class JobDTO {
     private String location;
     private String slug;
     private String description;
+    private String requirement;
+    private String responsibility;
     private String status;
+    private String benefit;
     private Integer salary;
     private UserDTO company;
     private String type;

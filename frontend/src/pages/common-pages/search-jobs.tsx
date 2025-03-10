@@ -59,7 +59,7 @@ function SearchJobsPage() {
     const fetchJobs = async () => {
       try {
         setJobData((prev) => ({ ...prev, isLoading: true }));
-        const res = await jobApi.getJob({
+        const res = await jobApi.getJobs({
           title,
           location,
           minSalary,
@@ -248,8 +248,8 @@ function SearchJobsPage() {
             <JobList jobs={jobData.jobs} />
 
             <Pagination className="my-16">
-              <PaginationContent>
-                <PaginationItem>
+              <PaginationContent className="list-none">
+                <PaginationItem className="">
                   <button
                     className="hover:bg-gray-300 rounded-sm disabled:opacity-50 disabled:hover:bg-transparent"
                     disabled={pagination.page === 0}

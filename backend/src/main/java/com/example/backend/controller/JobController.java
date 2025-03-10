@@ -10,12 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.prefix}/job")
@@ -24,6 +22,20 @@ public class JobController {
 
     public JobController(JobService jobService) {
         this.jobService = jobService;
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<ResponseObject> getJob(
+            @PathVariable String slug) {
+
+        JobDTO job = jobService.getJobBySlug(slug);
+
+        return ResponseEntity.ok()
+                .body(ResponseObject.builder()
+                        .message("Get job successfully")
+                        .data(job)
+                        .status(HttpStatus.OK)
+                        .build());
     }
 
     @GetMapping()
