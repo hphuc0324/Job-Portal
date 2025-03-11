@@ -25,14 +25,15 @@ export interface Job {
   title: string;
   location: string;
   slug: string;
-  type: 'fulltime' | 'partime';
+  type: string;
   salary: number;
   description: string;
-  requirements: string;
+  requirement: string;
   benefit: string;
   responsibility: string;
   status: string;
   level: string;
+  category: string;
   experience: number;
   company: User;
 }

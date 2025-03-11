@@ -1,4 +1,4 @@
-import { Category, Job, Level } from '@/types/dtos';
+import { Category, Job, Level, User } from '@/types/dtos';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -11,8 +11,8 @@ import SelectField from '../form-input/select-field';
 const UserSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty(),
-  experience: z.string(),
-  avatarUrl: z.string(),
+  email: z.string().email(),
+  avatarUrl: z.string().nullable(),
   role: z.string().nonempty(),
 });
 
@@ -25,14 +25,18 @@ const JobFormSchema = z.object({
   salary: z.coerce.number().min(1, 'Salary must be greater than 0'),
   type: z.string(),
   responsibility: z.string(),
-  requirements: z.string(),
+  requirement: z.string(),
+  benefit: z.string(),
+  company: UserSchema,
+  status: z.string(),
 });
 
 export type JobFormSchemaType = z.infer<typeof JobFormSchema>;
 
 interface JobFormProps {
   job?: Job;
-  onSubmit: (value: JobFormSchemaType, type: string) => void;
+  onSubmit: (value: JobFormSchemaType) => void;
+  user: User;
   levels?: Level[];
   categories?: Category[];
 }
@@ -43,29 +47,35 @@ export enum JobTypes {
   VOLUNTEERING = 'volunteering',
 }
 
-function JobForm({ job, onSubmit, levels, categories }: JobFormProps) {
+function JobForm({ job, user, onSubmit, levels, categories }: JobFormProps) {
   const form = useForm<JobFormSchemaType>({
-    defaultValues: job || {
-      title: '',
-      location: '',
-      level: '',
-      category: '',
-      description: '{}',
-      salary: 0,
-      type: '',
-      responsibility: '{}',
-      requirements: '{}',
+    defaultValues: {
+      title: job?.title || '',
+      location: job?.location || '',
+      level: job?.level || '',
+      category: job?.category || '',
+      description: job?.description || JSON.stringify({ type: 'doc', content: [] }),
+      salary: job?.salary || 0,
+      type: job?.type || '',
+      responsibility: job?.responsibility || JSON.stringify({ type: 'doc', content: [] }),
+      requirement: job?.requirement || JSON.stringify({ type: 'doc', content: [] }),
+      benefit: job?.benefit || JSON.stringify({ type: 'doc', content: [] }),
+      company: user,
+      status: job?.status || 'draft',
     },
     resolver: zodResolver(JobFormSchema),
   });
 
-  const handleSubmit = async (type: 'save' | 'draft') => {
-    form.handleSubmit((values) => onSubmit(values, type))();
+  const handleSubmit = async (type: 'active' | 'draft') => {
+    form.setValue('status', type);
+    form.handleSubmit((values) => onSubmit(values))();
   };
+
+  console.log(job);
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((values) => onSubmit(values, 'save'))}>
+      <form onSubmit={form.handleSubmit((values) => onSubmit(values))}>
         <div className="grid grid-cols-2 gap-4">
           <InputField control={form.control} name="title" label="Title" placeholder="Title" />
           <InputField control={form.control} name="location" label="Location" placeholder="Location" />
@@ -108,8 +118,8 @@ function JobForm({ job, onSubmit, levels, categories }: JobFormProps) {
           <span className="text-sm font-semibold">Requirements</span>
           <Editor
             editable={true}
-            value={form.watch('requirements')}
-            onChange={(value) => form.setValue('requirements', value)}
+            value={form.watch('requirement')}
+            onChange={(value) => form.setValue('requirement', value)}
           />
         </div>
 
@@ -122,8 +132,13 @@ function JobForm({ job, onSubmit, levels, categories }: JobFormProps) {
           />
         </div>
 
+        {/* <div className="my-4">
+          <span className="text-sm font-semibold">Benefits</span>
+          <Editor editable={true} value={form.watch('benefit')} onChange={(value) => form.setValue('benefit', value)} />
+        </div> */}
+
         <div className="flex gap-2">
-          <Button type="button" className="text-[#FFD149]" onClick={() => handleSubmit('save')}>
+          <Button type="button" className="text-[#FFD149]" onClick={() => handleSubmit('active')}>
             Save
           </Button>
           <Button

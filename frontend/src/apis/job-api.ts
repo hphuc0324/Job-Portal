@@ -1,6 +1,6 @@
 import JobFilter from '@/types/filters/job-filter';
 import axiosClient from './api-client';
-
+import { JobFormSchemaType } from '@/components/forms/job-form';
 const baseUrl = '/job';
 
 const jobApi = {
@@ -42,6 +42,14 @@ const jobApi = {
 
   getJobDetails: (slug: string) => {
     return axiosClient.get(`${baseUrl}/${slug}`);
+  },
+
+  createJob: (data: JobFormSchemaType) => {
+    return axiosClient.post(baseUrl, data);
+  },
+
+  updateJob: (slug: string, data: JobFormSchemaType) => {
+    return axiosClient.patch(`${baseUrl}/${slug}`, data);
   },
 };
 

@@ -79,4 +79,14 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ResponseObject> handleForbiddenException(ForbiddenException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                ResponseObject.builder()
+                        .message(e.getMessage())
+                        .status(HttpStatus.FORBIDDEN)
+                        .build()
+        );
+    }
 }

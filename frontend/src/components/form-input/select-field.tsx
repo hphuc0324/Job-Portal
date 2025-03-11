@@ -11,8 +11,6 @@ interface SelectFieldProps {
 }
 
 function SelectField({ form, label, placeholder, options, name }: SelectFieldProps) {
-  console.log(options);
-
   return (
     <FormField
       control={form.control}

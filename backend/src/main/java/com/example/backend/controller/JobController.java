@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.annotation.IsJobOwner;
 import com.example.backend.dto.JobDTO;
 import com.example.backend.dto.JobFilterDTO;
 import com.example.backend.response.ResponseObject;
@@ -36,6 +37,33 @@ public class JobController {
                         .data(job)
                         .status(HttpStatus.OK)
                         .build());
+    }
+
+    @PatchMapping("/{slug}")
+    @IsJobOwner(idParam = "slug")
+    public ResponseEntity<ResponseObject> updateJob(@PathVariable String slug, @RequestBody JobDTO jobDTO) {
+        JobDTO updatedJob = jobService.updateJob(slug, jobDTO);
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Update job successfully")
+                        .data(updatedJob)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
+    @PostMapping()
+    public ResponseEntity<ResponseObject> createJob(@RequestBody JobDTO jobDTO) {
+        JobDTO createdJob = jobService.createJob(jobDTO);
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Create job successfully")
+                        .data(createdJob)
+                        .status(HttpStatus.CREATED)
+                        .build()
+        );
     }
 
     @GetMapping()

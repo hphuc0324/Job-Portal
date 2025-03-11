@@ -26,7 +26,7 @@ interface MenuButtonProps {
 
 function MenuButton({ active, onClick, children, disabled = false }: MenuButtonProps) {
   return (
-    <Button disabled={disabled} onClick={onClick} variant="outline" className={cn('w-8 h-8', active && '!bg-gray-200')}>
+    <Button type='button' disabled={disabled} onClick={onClick} variant="outline" className={cn('w-8 h-8', active && '!bg-gray-200')}>
       {children}
     </Button>
   );
