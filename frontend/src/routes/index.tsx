@@ -10,6 +10,7 @@ import JobDetailsPage from '@/pages/common-pages/job-details';
 import SearchJobsPage from '@/pages/common-pages/search-jobs';
 import PostJob from '@/pages/employer-pages/post-job';
 import { Roles } from '@/types/schemas/register';
+import SearchTalentsPage from '@/pages/common-pages/search-talents';
 
 export const publicRoutes = [
   {
@@ -25,6 +26,10 @@ export const publicRoutes = [
           {
             path: 'jobs',
             element: <SearchJobsPage />,
+          },
+          {
+            path: 'talents',
+            element: <SearchTalentsPage />,
           },
         ],
       },
