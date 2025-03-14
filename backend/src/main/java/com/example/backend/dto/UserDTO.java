@@ -20,4 +20,10 @@ public class UserDTO {
     private String role;
 
     private String description;
+
+    private String skills;
+
+    private Integer experience;
+
+    private String location;
 }

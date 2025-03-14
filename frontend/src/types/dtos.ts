@@ -3,7 +3,7 @@ export interface User {
   name: string;
   job?: string;
   location?: string;
-  experience?: string;
+  experience?: number;
   avatarUrl?: string;
   role: string;
   description?: string;

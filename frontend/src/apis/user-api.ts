@@ -24,8 +24,20 @@ const userApi = {
       queryParams.append('experience', filter.experience.toString());
     }
 
+    if (filter.minExperience) {
+      queryParams.append('minExperience', filter.minExperience.toString());
+    }
+
+    if (filter.maxExperience) {
+      queryParams.append('maxExperience', filter.maxExperience.toString());
+    }
+
     if (filter.location) {
       queryParams.append('location', filter.location);
+    }
+
+    if (filter.skills && filter.skills.length > 0) {
+      queryParams.append('skills', filter.skills.join(','));
     }
 
     queryParams.append('limit', limit.toString());

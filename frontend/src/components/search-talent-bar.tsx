@@ -15,10 +15,18 @@ interface SearchTalentBarProps {
 }
 
 function SearchTalentBar({ name, location, skills, minExperience, maxExperience, setFilters }: SearchTalentBarProps) {
-  const [localSearch, setLocalSearch] = useState<{ name: string; location: string; skills: string[] }>({
+  const [localSearch, setLocalSearch] = useState<{
+    name: string;
+    location: string;
+    skills: string[];
+    minExperience: number;
+    maxExperience: number;
+  }>({
     name: name || '',
     location: location || '',
     skills: skills || [],
+    minExperience: minExperience || 0,
+    maxExperience: maxExperience || 5,
   });
   const [localSkills, setLocalSkills] = useState<string>('');
 
@@ -26,6 +34,10 @@ function SearchTalentBar({ name, location, skills, minExperience, maxExperience,
     if (!localSkills || localSearch.skills.includes(localSkills)) return;
     setLocalSearch((prev) => ({ ...prev, skills: [...prev.skills, localSkills] }));
     setLocalSkills('');
+  };
+
+  const handleSearch = () => {
+    setFilters(localSearch);
   };
 
   return (
@@ -40,7 +52,7 @@ function SearchTalentBar({ name, location, skills, minExperience, maxExperience,
             className="focus-visible:border-none focus-visible:outline-none"
           />
 
-          <Separator orientation="vertical" className="h-[80%] mx-8" />
+          <Separator orientation="vertical" className="h-[80%] mx-5" />
           <div className="flex items-center gap-2">
             <Map />
             <input
@@ -51,9 +63,11 @@ function SearchTalentBar({ name, location, skills, minExperience, maxExperience,
             />
           </div>
 
-          <Separator orientation="vertical" className="h-[80%] mx-8" />
+          <Separator orientation="vertical" className="h-[80%] mx-5" />
           <div className="flex items-center gap-2">
-            <Zap />
+            <div>
+              <Zap />
+            </div>
             <div className="flex flex-wrap gap-2 max-w-52 max-h-14 overflow-hidden overflow-y-auto">
               {localSearch.skills?.map((skill, index) => (
                 <div key={index} className="flex items-center gap-1 bg-slate-500 text-white rounded-full px-2 min-w-12">
@@ -72,21 +86,23 @@ function SearchTalentBar({ name, location, skills, minExperience, maxExperience,
               value={localSkills || ''}
               onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()}
               onChange={(e) => setLocalSkills(e.target.value)}
-              placeholder="Location..."
+              placeholder="Skills..."
               className="focus-visible:border-none focus-visible:outline-none"
             />
           </div>
 
-          <Separator orientation="vertical" className="h-[80%] mx-8" />
+          <Separator orientation="vertical" className="h-[80%] mx-5" />
           <div className="w-full h-full flex-1">
             <h3 className="font-semibold text-sm mb-2">Experience(year)</h3>
             <DualRangeSlider
               className="max-w-48"
-              value={[minExperience ?? 0, maxExperience ?? 5]}
+              value={[localSearch.minExperience ?? 0, localSearch.maxExperience ?? 5]}
               min={0}
               max={20}
               step={1}
-              onValueChange={(value) => setFilters({ minExperience: value[0], maxExperience: value[1] })}
+              onValueChange={(value) =>
+                setLocalSearch((prev) => ({ ...prev, minExperience: value[0], maxExperience: value[1] }))
+              }
               label={(value) => <span className="text-sm absolute -top-2">{value}</span>}
               labelPosition="bottom"
             />

@@ -34,10 +34,10 @@ function DesktopBar() {
           <div
             className={cn(
               'h-full px-3 flex items-center',
-              path.includes('/seach/talents') && 'border-b-2 border-solid border-white ',
+              path.includes('/search/talents') && 'border-b-2 border-solid border-white ',
             )}
           >
-            <Link to="/seach/talents">Find talents</Link>
+            <Link to="/search/talents">Find talents</Link>
           </div>
           <div
             className={cn(

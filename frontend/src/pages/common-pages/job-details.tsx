@@ -23,9 +23,10 @@ const temp: Job = {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam non consectetur justo. Duis consectetur, velit non scelerisque tristique, justo nisi laoreet justo, at consectetur risus nunc in velit. Donec sagittis libero non justo dictum, at scelerisque enim commodo. Sed non velit auctor, bibendum neque non, maximus neque.',
   status: 'active',
   responsibility: 'Something',
-  requirements: 'Something',
+  requirement: 'Something',
   benefit: 'Something',
   level: 'intern',
+  category: 'technology',
   experience: 1,
   company: {
     id: 'something',

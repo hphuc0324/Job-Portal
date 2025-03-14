@@ -74,8 +74,10 @@ const useUserFilters = () => {
     minExperience,
     maxExperience,
     skills,
-    page,
-    limit,
+    pagination: {
+      page: page ? parseInt(page) : 0,
+      limit: limit ? parseInt(limit) : 5,
+    },
     setSearchFilters,
   };
 };

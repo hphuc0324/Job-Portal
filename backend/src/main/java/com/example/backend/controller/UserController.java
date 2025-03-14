@@ -124,8 +124,12 @@ public class UserController {
             @RequestParam(name = "experience", required = false, defaultValue = "0") Integer experience,
             @RequestParam(name = "role", required = false, defaultValue = "applicant") String role,
             @RequestParam(name = "location", required = false) String location,
+            @RequestParam(name = "minExperience", required = false) Integer minExperience,
+            @RequestParam(name = "maxExperience", required = false) Integer maxExperience,
+            @RequestParam(name = "skills", required = false) List<String> skills,
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name = "limit", required = false, defaultValue = "5") Integer limit
+
     ) {
 
         Pageable pageable = PageRequest.of(page, limit);
@@ -133,6 +137,9 @@ public class UserController {
                 .name(name)
                 .location(location)
                 .experience(experience)
+                .minExperience(minExperience)
+                .maxExperience(maxExperience)
+                .skills(skills)
                 .roleName(role)
                 .build();
 
