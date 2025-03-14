@@ -44,10 +44,6 @@ function JobDetailsPage() {
   const { toast } = useToast();
   const [job, setJob] = useState<Job | null>(null);
 
-  const [description, setDescription] = useState<string>(
-    '{"type":"doc","content":[{"type":"bulletList","content":[{"type":"listItem","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","marks":[{"type":"bold"}],"text":"Hello World!"}]}]}]}]}',
-  );
-
   useEffect(() => {
     const handleFetchJobDetails = async () => {
       if (slug) {
@@ -133,17 +129,17 @@ function JobDetailsPage() {
 
           <div className="my-8">
             <h2 className="font-bold text-[24px] my-1">About the job</h2>
-            <Editor value={description} onChange={(value) => setDescription(value)} />
+            <p>{job.description}</p>
           </div>
 
           <div className="my-8">
             <h2 className="font-bold text-[24px] my-1">Responsibility</h2>
-            <p>{job.description}</p>
+            <Editor value={job.responsibility} />
           </div>
 
           <div className="my-8">
             <h2 className="font-bold text-[24px] my-1">Quality and Skill sets</h2>
-            <p>{job.description}</p>
+            <Editor value={job.requirement} />
           </div>
 
           <Separator className="w-full my-8" />

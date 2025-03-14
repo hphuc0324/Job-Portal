@@ -7,6 +7,7 @@ import InputField from '../form-input/input-field';
 import Editor from '../richtext-editor/editor';
 import { Button } from '../ui/button';
 import SelectField from '../form-input/select-field';
+import TextArea from '../form-input/text-area';
 
 const UserSchema = z.object({
   id: z.string().nonempty(),
@@ -54,7 +55,7 @@ function JobForm({ job, user, onSubmit, levels, categories }: JobFormProps) {
       location: job?.location || '',
       level: job?.level || '',
       category: job?.category || '',
-      description: job?.description || JSON.stringify({ type: 'doc', content: [] }),
+      description: job?.description || '',
       salary: job?.salary || 0,
       type: job?.type || '',
       responsibility: job?.responsibility || JSON.stringify({ type: 'doc', content: [] }),
@@ -107,12 +108,7 @@ function JobForm({ job, user, onSubmit, levels, categories }: JobFormProps) {
         </div>
 
         <div className="my-4">
-          <span className="text-sm font-semibold">Description</span>
-          <Editor
-            editable={true}
-            value={form.watch('description')}
-            onChange={(value) => form.setValue('description', value)}
-          />
+          <TextArea control={form.control} name="description" label="Description" placeholder="Job description" />
         </div>
         <div className="my-4">
           <span className="text-sm font-semibold">Requirements</span>
