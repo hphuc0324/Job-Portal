@@ -58,6 +58,15 @@ public class JobService {
         return jobMapper.toJobDTO(foundJob.get());
     }
 
+    public Job findById(UUID id){
+        Optional<Job> foundJob = jobRepository.findById(id);
+        if(foundJob.isEmpty()){
+            throw new DataNotFoundException("Job not found");
+        }
+
+        return foundJob.get();
+    }
+
     public JobDTO updateJob(String slug, JobDTO jobDTO){
         Optional<Job> foundJob = jobRepository.findBySlug(slug);
 
@@ -107,6 +116,7 @@ public class JobService {
         job.setCompany(entityManager.getReference(User.class, jobDTO.getCompany().getId()));
         job.setCategory(categoryService.getCategoryByName(jobDTO.getCategory()).get());
         job.setLevel(levelService.getLevelByName(jobDTO.getLevel()).get());
+        job.setNumberOfApplicants(0);
         job.setStatus(jobDTO.getStatus());
 
         Job createdJob = jobRepository.save(job);

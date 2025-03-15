@@ -83,7 +83,7 @@ public class JobController {
                 .location(location)
                 .type(type)
                 .minSalary(minSalary)
-                .maxSalary(minSalary)
+                .maxSalary(maxSalary)
                 .categories(categories)
                 .level(level)
                 .build();

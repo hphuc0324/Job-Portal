@@ -55,6 +55,9 @@ public class Job {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "number_of_applicants")
+    private Integer numberOfApplicants;
+
     @ManyToOne
     @JoinColumn(name = "level_id", referencedColumnName = "id")
     private Level level;

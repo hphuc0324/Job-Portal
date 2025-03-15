@@ -53,3 +53,4 @@ cloudinary:
   api-secret: ${SPRING_CLOUDINARY_API_SECRET}
   cloudinary-folder: Job Portal
   user-avatar-folder: /user-avatar
+  user-resume-folder: /resume

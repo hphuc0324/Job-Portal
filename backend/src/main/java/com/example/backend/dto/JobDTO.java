@@ -22,4 +22,5 @@ public class JobDTO {
     private String type;
     private String level;
     private String category;
+    private Integer numberOfApplicants;
 }

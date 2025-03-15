@@ -158,12 +158,12 @@ function SearchJobsPage() {
               </div>
               <div className="flex items-center space-x-2 my-3">
                 <Checkbox
-                  id="partime"
-                  checked={type?.includes('partime')}
-                  value="partime"
+                  id="parttime"
+                  checked={type?.includes('parttime')}
+                  value="parttime"
                   onCheckedChange={(checked) =>
                     setFilters({
-                      type: checked ? [...type, 'partime'] : type.filter((t) => t !== 'partime'),
+                      type: checked ? [...type, 'parttime'] : type.filter((t) => t !== 'parttime'),
                     })
                   }
                 />

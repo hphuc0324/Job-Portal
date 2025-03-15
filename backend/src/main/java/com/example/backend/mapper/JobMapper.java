@@ -6,6 +6,7 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface JobMapper {
+    @Named("toJobDTO")
     @Mapping(source = "company", target = "company", qualifiedByName = "toUserDTO")
     @Mapping(source = "level.name", target = "level")
     @Mapping(source = "category.name", target = "category")

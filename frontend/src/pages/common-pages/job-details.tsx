@@ -1,5 +1,6 @@
 import jobApi from '@/apis/job-api';
 import JobList from '@/components/job-list';
+import ApplyModal from '@/components/modals/apply-modal';
 import Editor from '@/components/richtext-editor/editor';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -80,9 +81,10 @@ function JobDetailsPage() {
             </div>
 
             <div className="flex gap-3">
-              <Button className="w-24 h-12" variant="third">
+              {/* <Button className="w-24 h-12" variant="third">
                 Apply
-              </Button>
+              </Button> */}
+              <ApplyModal job={job} />
               <Button className="w-12 h-12" variant="outline">
                 <Bookmark className="h-8 w-8" />
               </Button>
