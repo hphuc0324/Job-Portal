@@ -11,16 +11,9 @@ import jobApi from '@/apis/job-api';
 import { Category, Job, Level } from '@/types/dtos';
 import JobList from '@/components/job-list';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Pagination,
-  PaginationPrevious,
-  PaginationItem,
-  PaginationContent,
-  PaginationNext,
-} from '@/components/ui/pagination';
-import { cn } from '@/lib/utils';
 import levelApi from '@/apis/level-api';
 import categoryApi from '@/apis/category-api';
+import PaginationBar from '@/components/pagination-bar';
 
 function SearchJobsPage() {
   const { title, location, minSalary, maxSalary, level, categories, type, pagination, setFilters } = useJobFilters();
@@ -124,7 +117,7 @@ function SearchJobsPage() {
   };
 
   return (
-    <div className="bg-[#f0f5f9] w-screen">
+    <div className="bg-[#f0f5f9] w-screen min-h-screen">
       <SearchJobBar title={title} location={location} setFilters={setFilters} />
       <div className="p-8 w-full max-w-screen-xl mx-auto">
         <h2 className="font-semibold text-2xl">Recommended Jobs</h2>
@@ -247,41 +240,11 @@ function SearchJobsPage() {
           <div className="my-8 flex-1">
             <JobList jobs={jobData.jobs} />
 
-            <Pagination className="my-16">
-              <PaginationContent className="list-none">
-                <PaginationItem className="">
-                  <button
-                    className="hover:bg-gray-300 rounded-sm disabled:opacity-50 disabled:hover:bg-transparent"
-                    disabled={pagination.page === 0}
-                  >
-                    <PaginationPrevious className="bg-transparent hover:bg-transparent">Previous</PaginationPrevious>
-                  </button>
-                </PaginationItem>
-                {Array.from({ length: jobData.totalPages }, (_, i) => (
-                  <PaginationItem className="mx-2" key={i}>
-                    <button
-                      disabled={pagination.page === i}
-                      onClick={() => handleChangePage(i)}
-                      className={cn(
-                        'hover:bg-gray-300 px-2.5 pb-1 rounded-sm ',
-                        pagination.page === i && 'outline-primary outline-1 outline-double',
-                      )}
-                    >
-                      {i + 1}
-                    </button>
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <button
-                    className="hover:bg-gray-300 rounded-sm disabled:opacity-50 disabled:hover:bg-transparent"
-                    disabled={pagination.page >= jobData.totalPages - 1}
-                  >
-                    <PaginationNext className="bg-transparent hover:bg-transparent">Next</PaginationNext>
-                  </button>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <PaginationBar
+              currentPage={pagination.page}
+              totalPages={jobData.totalPages}
+              onPageChange={handleChangePage}
+            />
           </div>
         </div>
       </div>

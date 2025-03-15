@@ -76,7 +76,7 @@ const useUserFilters = () => {
     skills,
     pagination: {
       page: page ? parseInt(page) : 0,
-      limit: limit ? parseInt(limit) : 5,
+      limit: limit ? parseInt(limit) : 6,
     },
     setSearchFilters,
   };

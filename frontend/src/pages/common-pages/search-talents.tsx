@@ -1,28 +1,16 @@
 import userApi from '@/apis/user-api';
+import PaginationBar from '@/components/pagination-bar';
 import SearchTalentBar from '@/components/search-talent-bar';
-import TalentCard from '@/components/talent-card';
 import TalentList from '@/components/talent-list';
 import useUserFilters from '@/hooks/use-user-filters';
 import { User } from '@/types/dtos';
-import { Roles } from '@/types/schemas/register';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-
-const user = {
-  id: 'something',
-  name: 'John Doe',
-  job: 'Software Engineer',
-  avatarUrl: 'https://github.com/shadcn.png',
-  skills: 'React, Node.js, TypeScript',
-  description: 'I am a full-stack developer with 5 years of, with 5 years of experience',
-  experience: 5,
-  role: Roles.CANDIDATE,
-  location: 'Vietnam',
-};
 
 function SearchTalentsPage() {
   const { name, location, minExperience, maxExperience, skills, pagination, setSearchFilters } = useUserFilters();
   const [users, setUsers] = useState<User[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const handleFetchUsers = async () => {
@@ -39,6 +27,7 @@ function SearchTalentsPage() {
           pagination.limit,
         );
 
+        setTotalPages(res.data.data.totalPages);
         setUsers(res.data.data.content);
       } catch (error: AxiosError | any) {
         console.error(error);
@@ -50,8 +39,14 @@ function SearchTalentsPage() {
 
   console.log(users);
 
+  const handlePageChange = (page: number) => {
+    if (page < 0 || page >= totalPages || page === pagination.page) return;
+
+    setSearchFilters({ pagination: { ...pagination, page } });
+  };
+
   return (
-    <div className="bg-[#f0f5f9] w-screen">
+    <div className="bg-[#f0f5f9] w-screen min-h-screen pb-2">
       <SearchTalentBar
         name={name}
         location={location}
@@ -61,6 +56,8 @@ function SearchTalentsPage() {
         setFilters={setSearchFilters}
       />
       <div className="p-8 w-full max-w-screen-xl mx-auto">{users && <TalentList talents={users} />}</div>
+
+      <PaginationBar currentPage={pagination.page} totalPages={totalPages} onPageChange={handlePageChange} />
     </div>
   );
 }

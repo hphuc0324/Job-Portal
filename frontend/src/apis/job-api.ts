@@ -35,7 +35,7 @@ const jobApi = {
     }
 
     queryParams.append('page', filter.pagination?.page.toString() || '0');
-    queryParams.append('limit', filter.pagination?.limit.toString() || '5');
+    queryParams.append('limit', filter.pagination?.limit.toString() || '6');
 
     return axiosClient.get(`${baseUrl}?${queryParams.toString()}`);
   },
