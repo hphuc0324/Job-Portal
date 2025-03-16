@@ -11,6 +11,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ApplicationService {
@@ -40,5 +44,11 @@ public class ApplicationService {
         jobService.updateJob(job.getSlug(), jobDTO);
 
         return applicationMapper.toApplicationDTO(applicationRepository.save(application));
+    }
+
+    public List<ApplicationDTO> getJobApplications(String slug) {
+        List<Application> applications = applicationRepository.findAllByJobSlug(slug);
+
+        return applications.stream().map(applicationMapper::toApplicationDTO).collect(Collectors.toList());
     }
 }

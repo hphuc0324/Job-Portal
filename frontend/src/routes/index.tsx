@@ -2,7 +2,6 @@ import LoginPage from '@/pages/auth-pages/login';
 import ProfilePage from '@/pages/personal-pages/profile';
 import RegisterPage from '@/pages/auth-pages/register';
 import SocialCallback from '@/pages/auth-pages/social-callback';
-import { Outlet } from 'react-router-dom';
 import PrivateRoute from '@/components/router-component/private-route';
 import UnauthorizedRoute from '@/components/router-component/unauthrozied-route';
 import DefaultLayout from '@/components/layouts/default-layout';
@@ -11,6 +10,9 @@ import SearchJobsPage from '@/pages/common-pages/search-jobs';
 import PostJob from '@/pages/employer-pages/post-job';
 import { Roles } from '@/types/schemas/register';
 import SearchTalentsPage from '@/pages/common-pages/search-talents';
+import EmployerDashboard from '@/pages/employer-pages/employer-dashboard';
+import EmployerDashboardLayout from '@/components/layouts/employer-dashboard-layout';
+import EmployerJobPage from '@/pages/employer-pages/employer-job-page';
 
 export const publicRoutes = [
   {
@@ -35,20 +37,20 @@ export const publicRoutes = [
       },
       {
         path: '/dashboard',
-        element: (
-          <>
-            dashboard layout
-            <Outlet />
-          </>
-        ),
         children: [
           {
-            index: true,
-            element: <>dashboard main</>,
-          },
-          {
-            path: 'profile',
-            element: <>profile</>,
+            path: 'employer',
+            element: <EmployerDashboardLayout />,
+            children: [
+              {
+                index: true,
+                element: <EmployerDashboard />,
+              },
+              {
+                path: ':slug',
+                element: <EmployerJobPage />,
+              },
+            ],
           },
         ],
       },

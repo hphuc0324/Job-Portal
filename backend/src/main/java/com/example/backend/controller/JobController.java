@@ -100,4 +100,20 @@ public class JobController {
                         .build()
         );
     }
+
+    @GetMapping("/company-jobs/{id}")
+    public ResponseEntity<ResponseObject> getCompanyJobs(
+            @PathVariable(name = "id") UUID id
+    ) {
+
+        List<JobDTO> jobs = jobService.getCompanyJobs(id);
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Get company jobs successfully")
+                        .data(jobs)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
 }

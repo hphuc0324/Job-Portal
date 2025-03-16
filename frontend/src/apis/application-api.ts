@@ -10,6 +10,10 @@ const applicationApi = {
       },
     });
   },
+
+  getJobApplications: (slug: string) => {
+    return axiosClient.get(`${baseUrl}/job-applications/${slug}`);
+  },
 };
 
 export default applicationApi;

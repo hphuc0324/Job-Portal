@@ -51,3 +51,14 @@ export interface Category {
   name: string;
   slug: string;
 }
+
+export interface Application {
+  id: string;
+  email: string;
+  coverLetter: string;
+  resume: string;
+  status: 'pending' | 'invited' | 'offered' | 'rejected';
+  phoneNumber: string;
+  user: User;
+  job: Job;
+}

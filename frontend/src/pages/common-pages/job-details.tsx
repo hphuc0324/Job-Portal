@@ -1,4 +1,5 @@
 import jobApi from '@/apis/job-api';
+import JobDetailsComponent from '@/components/job-details-component';
 import JobList from '@/components/job-list';
 import ApplyModal from '@/components/modals/apply-modal';
 import Editor from '@/components/richtext-editor/editor';
@@ -67,99 +68,7 @@ function JobDetailsPage() {
 
   return (
     <div className="w-screen max-w-screen-xl mx-auto p-8 flex gap-8">
-      {job && (
-        <div className="w-full max-w-[70%]">
-          <div className="flex items-center gap-2">
-            <UserAvatar size="medium" type="employer" avatarUrl={job.company.avatarUrl} />
-            <div className="space-y-1 flex-1">
-              <p className="font-bold text-xl">{job.title}</p>
-              <div className="flex">
-                <span className="block">{job.company.name}</span>
-                <Dot />
-                <span className="block">{job.location}</span>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              {/* <Button className="w-24 h-12" variant="third">
-                Apply
-              </Button> */}
-              <ApplyModal job={job} />
-              <Button className="w-12 h-12" variant="outline">
-                <Bookmark className="h-8 w-8" />
-              </Button>
-            </div>
-          </div>
-
-          <Separator className="w-full my-8" />
-
-          <div className="flex justify-between">
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
-                <MapPin className="w-8 h-8" />
-              </div>
-              <span className="block text-gray-400">Location</span>
-              <span className="text-[18px]">{job.location}</span>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
-                <BriefcaseBusiness className="w-8 h-8" />
-              </div>
-              <span className="block text-gray-400">Level</span>
-              <span className="text-[18px] capitalize">{job.level}</span>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
-                <CircleDollarSign className="w-8 h-8" />
-              </div>
-              <span className="block text-gray-400">Salary</span>
-              <span className="text-[18px] capitalize">${job.salary}</span>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 p-2 rounded-full bg-third text-white">
-                <Clock className="w-8 h-8" />
-              </div>
-              <span className="block text-gray-400">Type</span>
-              <span className="text-[18px] capitalize">{job.type}</span>
-            </div>
-          </div>
-
-          <Separator className="w-full my-8" />
-
-          <div className="my-8">
-            <h2 className="font-bold text-[24px] my-1">About the job</h2>
-            <p>{job.description}</p>
-          </div>
-
-          <div className="my-8">
-            <h2 className="font-bold text-[24px] my-1">Responsibility</h2>
-            <Editor value={job.responsibility} />
-          </div>
-
-          <div className="my-8">
-            <h2 className="font-bold text-[24px] my-1">Quality and Skill sets</h2>
-            <Editor value={job.requirement} />
-          </div>
-
-          <Separator className="w-full my-8" />
-
-          <h2 className="font-bold text-[24px] my-1">About the Company</h2>
-          <div className="flex gap-2 items-center w-full">
-            <UserAvatar size="small" type="employer" avatarUrl={job.company.avatarUrl} />
-            <div className="flex-1">
-              <p className="font-semibold text-[18px]">{job.company.name}</p>
-              <p className="text-xs font-semibold text-gray-500">{job.company.location}</p>
-            </div>
-            <Link className="p-2 font-semibold bg-yellow-500 rounded-md text-white" to={`/profile/${job.company.id}`}>
-              Company page
-            </Link>
-          </div>
-          <p className="my-4">{job.company.description}</p>
-        </div>
-      )}
+      <div className="w-full max-w-[70%]">{job && <JobDetailsComponent job={job} />}</div>
 
       <div className="max-w-[30%]">
         <h2 className="font-bold text-[24px] mb-8">Recommended jobs</h2>

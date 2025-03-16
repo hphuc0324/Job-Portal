@@ -9,13 +9,14 @@ import { useNavigate } from 'react-router-dom';
 
 interface TalentCardProps {
   user: User;
+  status?: 'pending' | 'invited' | 'offered' | 'rejected';
 }
 
-function TalentCard({ user }: TalentCardProps) {
+function TalentCard({ user, status }: TalentCardProps) {
   const navigate = useNavigate();
 
   return (
-    <Card className="p-4 max-h-72 hover:shadow-lg cursor-pointer max-w-[400px]">
+    <Card className="p-4 max-h-80 hover:shadow-lg cursor-pointer max-w-[400px]">
       <div>
         <div className="flex gap-1 items-center">
           <UserAvatar avatarUrl={user.avatarUrl} />
@@ -57,10 +58,34 @@ function TalentCard({ user }: TalentCardProps) {
           <Button type="button" className="flex-1 text-[#FFD149]" onClick={() => navigate(`/profile/${user.id}`)}>
             Profile
           </Button>
-          <Button type="button" className="flex-1 bg-[#FFD149] text-black hover:bg-[#FFD149]/80" onClick={() => {}}>
-            Message
-          </Button>
+
+          {status && status !== 'offered' && status !== 'rejected' && (
+            <Button type="button" className="flex-1 text-[#FFD149]">
+              Reject
+            </Button>
+          )}
+          {(!status || status === 'offered' || status === 'rejected') && (
+            <Button type="button" className="flex-1 bg-[#FFD149] text-black hover:bg-[#FFD149]/80" onClick={() => {}}>
+              Message
+            </Button>
+          )}
+
+          {status === 'pending' && (
+            <Button type="button" className="flex-1 text-[#FFD149]">
+              Schedule
+            </Button>
+          )}
         </div>
+
+        {status && status !== 'offered' && status !== 'rejected' && (
+          <Button
+            type="button"
+            className="w-full my-3 bg-[#FFD149] text-black hover:bg-[#FFD149]/80"
+            onClick={() => {}}
+          >
+            View application
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

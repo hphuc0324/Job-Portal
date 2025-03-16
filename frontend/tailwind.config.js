@@ -36,6 +36,9 @@ export default {
         third: {
           DEFAULT: '#1a75e8',
         },
+        info: {
+          DEFAULT: '#34a69c',
+        },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',

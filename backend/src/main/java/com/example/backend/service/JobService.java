@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,5 +122,11 @@ public class JobService {
 
         Job createdJob = jobRepository.save(job);
         return jobMapper.toJobDTO(createdJob);
+    }
+
+    public List<JobDTO> getCompanyJobs(UUID companyId){
+        List<Job> jobs = jobRepository.findAllByCompanyId(companyId);
+
+        return jobs.stream().map(jobMapper::toJobDTO).collect(Collectors.toList());
     }
 }

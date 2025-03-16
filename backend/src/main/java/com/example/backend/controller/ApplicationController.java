@@ -8,6 +8,7 @@ import com.example.backend.service.ApplicationService;
 import com.example.backend.service.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,5 +58,21 @@ public class ApplicationController {
                         .build()
         );
     }
+
+    @GetMapping("/job-applications/{slug}")
+    public ResponseEntity<ResponseObject> getJobApplications(
+            @PathVariable(name = "slug") String slug){
+
+        List<ApplicationDTO> applications = applicationService.getJobApplications(slug);
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Get job applications successfully")
+                        .data(applications)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
 
 }

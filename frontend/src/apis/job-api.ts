@@ -48,8 +48,12 @@ const jobApi = {
     return axiosClient.post(baseUrl, data);
   },
 
-  updateJob: (slug: string, data: JobFormSchemaType) => {
+  updateJob: (slug: string, data: any) => {
     return axiosClient.patch(`${baseUrl}/${slug}`, data);
+  },
+
+  getCompanyJobs: (companyId: string) => {
+    return axiosClient.get(`${baseUrl}/company-jobs/${companyId}`);
   },
 };
 
