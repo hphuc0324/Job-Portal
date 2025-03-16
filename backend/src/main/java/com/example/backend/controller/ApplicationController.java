@@ -74,5 +74,19 @@ public class ApplicationController {
         );
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseObject> updateApplication(
+            @PathVariable(name = "id") UUID id,
+            @RequestBody ApplicationDTO application
+    ) {
+        ApplicationDTO updatedApplication = applicationService.updateApplication(id, application);
 
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Update application successfully")
+                        .data(updatedApplication)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
 }

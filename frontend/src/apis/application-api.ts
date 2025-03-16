@@ -14,6 +14,10 @@ const applicationApi = {
   getJobApplications: (slug: string) => {
     return axiosClient.get(`${baseUrl}/job-applications/${slug}`);
   },
+
+  updateApplication: (id: string, data: any) => {
+    return axiosClient.patch(`${baseUrl}/${id}`, data);
+  },
 };
 
 export default applicationApi;

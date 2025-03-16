@@ -79,7 +79,7 @@ function EmployerDashboardLayout() {
             ))}
         </div>
       </div>
-      <Outlet context={{ setJobs }} />
+      <Outlet context={{ setJobs, setStatus }} />
     </div>
   );
 }

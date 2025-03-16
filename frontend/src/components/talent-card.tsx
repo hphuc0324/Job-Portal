@@ -1,4 +1,4 @@
-import { User } from '@/types/dtos';
+import { Application, User } from '@/types/dtos';
 import { Card, CardContent } from './ui/card';
 import UserAvatar from './user-avatar';
 import { Heart, MapPin } from 'lucide-react';
@@ -6,13 +6,17 @@ import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ApplicationModal from './modals/application-modal';
 
 interface TalentCardProps {
   user: User;
   status?: 'pending' | 'invited' | 'offered' | 'rejected';
+  application?: Application;
+  onApplicationUpdate?: (applicationId: string, status: 'invited' | 'offered' | 'rejected') => void;
 }
 
-function TalentCard({ user, status }: TalentCardProps) {
+function TalentCard({ user, status, application, onApplicationUpdate }: TalentCardProps) {
   const navigate = useNavigate();
 
   return (
@@ -59,8 +63,22 @@ function TalentCard({ user, status }: TalentCardProps) {
             Profile
           </Button>
 
+          {status && status === 'invited' && (
+            <Button
+              type="button"
+              className="flex-1 text-[#FFD149]"
+              onClick={() => onApplicationUpdate?.(application?.id ?? '', 'offered')}
+            >
+              Offer
+            </Button>
+          )}
+
           {status && status !== 'offered' && status !== 'rejected' && (
-            <Button type="button" className="flex-1 text-[#FFD149]">
+            <Button
+              type="button"
+              className="flex-1 text-[#FFD149]"
+              onClick={() => onApplicationUpdate?.(application?.id ?? '', 'rejected')}
+            >
               Reject
             </Button>
           )}
@@ -77,14 +95,8 @@ function TalentCard({ user, status }: TalentCardProps) {
           )}
         </div>
 
-        {status && status !== 'offered' && status !== 'rejected' && (
-          <Button
-            type="button"
-            className="w-full my-3 bg-[#FFD149] text-black hover:bg-[#FFD149]/80"
-            onClick={() => {}}
-          >
-            View application
-          </Button>
+        {status && status !== 'offered' && status !== 'rejected' && application && (
+          <ApplicationModal application={application} />
         )}
       </CardContent>
     </Card>
