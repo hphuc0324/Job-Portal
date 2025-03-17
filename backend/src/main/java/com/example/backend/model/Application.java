@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -37,6 +38,9 @@ public class Application {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "schedule")
+    private Instant schedule;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -36,7 +36,7 @@ function ApplicationModal({ application }: ApplicationModalProps) {
             <span>{application.phoneNumber}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-semibold">Resume: </span>{' '}
+            <span className="font-semibold">Resume: </span>
             <a href={application.resume} target="_blank" className="text-blue-500 hover:underline">
               {application.user.name}
             </a>

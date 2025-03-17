@@ -1,26 +1,26 @@
 import { Application, User } from '@/types/dtos';
 import { Card, CardContent } from './ui/card';
 import UserAvatar from './user-avatar';
-import { Heart, MapPin } from 'lucide-react';
+import { CalendarIcon, MapPin } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import ApplicationModal from './modals/application-modal';
+import ScheduleModal from './modals/schedule-modal';
 
 interface TalentCardProps {
   user: User;
   status?: 'pending' | 'invited' | 'offered' | 'rejected';
   application?: Application;
-  onApplicationUpdate?: (applicationId: string, status: 'invited' | 'offered' | 'rejected') => void;
+  onApplicationUpdate?: (applicationId: string, data: any) => void;
 }
 
 function TalentCard({ user, status, application, onApplicationUpdate }: TalentCardProps) {
   const navigate = useNavigate();
 
   return (
-    <Card className="p-4 max-h-80 hover:shadow-lg cursor-pointer max-w-[400px]">
+    <Card className="p-4 max-h-96 hover:shadow-lg cursor-pointer max-w-[400px]">
       <div>
         <div className="flex gap-1 items-center">
           <UserAvatar avatarUrl={user.avatarUrl} />
@@ -28,18 +28,16 @@ function TalentCard({ user, status, application, onApplicationUpdate }: TalentCa
             <h3 className="font-bold">{user.name}</h3>
             <span className="flex font-semibold text-sm items-center">{user.job}</span>
           </div>
-
-          <button>
-            <Heart />
-          </button>
         </div>
-        <div className="flex my-2 gap-1">
-          {user.skills?.split(',').map((skill, index) => (
-            <Badge key={index} className="text-xs uppercase bg-[#eee0fc] text-[#ae83dd] hover:bg-[#eee0fc]">
-              {skill.trim()}
-            </Badge>
-          ))}
-        </div>
+        {!status && (
+          <div className="flex flex-wrap my-2 gap-1">
+            {user.skills?.split(',').map((skill, index) => (
+              <Badge key={index} className="text-xs uppercase bg-[#eee0fc] text-[#ae83dd] hover:bg-[#eee0fc]">
+                {skill.trim()}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
 
       <CardContent className="p-0">
@@ -47,14 +45,22 @@ function TalentCard({ user, status, application, onApplicationUpdate }: TalentCa
 
         <Separator className="my-2" />
 
-        <div className="flex justify-between items-center">
-          <span className="font-semibold">Experience: {user.experience} years</span>
+        {status !== 'invited' && (
+          <div className="flex justify-between items-center">
+            <span className="font-semibold">Experience: {user.experience} years</span>
 
-          <div className="flex items-center text-gray-500 my-2">
-            <MapPin />
-            <span className="text-sm">{user.location}</span>
+            <div className="flex items-center text-gray-500 my-2">
+              <MapPin />
+              <span className="text-sm">{user.location}</span>
+            </div>
           </div>
-        </div>
+        )}
+
+        {status === 'invited' && application?.schedule && (
+          <span className="flex py-2 gap-2">
+            <CalendarIcon /> Schedule: {new Date(application?.schedule).toLocaleString()}
+          </span>
+        )}
 
         <Separator className="my-2" />
 
@@ -67,7 +73,11 @@ function TalentCard({ user, status, application, onApplicationUpdate }: TalentCa
             <Button
               type="button"
               className="flex-1 text-[#FFD149]"
-              onClick={() => onApplicationUpdate?.(application?.id ?? '', 'offered')}
+              onClick={() =>
+                onApplicationUpdate?.(application?.id ?? '', {
+                  status: 'offered',
+                })
+              }
             >
               Offer
             </Button>
@@ -77,7 +87,11 @@ function TalentCard({ user, status, application, onApplicationUpdate }: TalentCa
             <Button
               type="button"
               className="flex-1 text-[#FFD149]"
-              onClick={() => onApplicationUpdate?.(application?.id ?? '', 'rejected')}
+              onClick={() =>
+                onApplicationUpdate?.(application?.id ?? '', {
+                  status: 'rejected',
+                })
+              }
             >
               Reject
             </Button>
@@ -88,10 +102,15 @@ function TalentCard({ user, status, application, onApplicationUpdate }: TalentCa
             </Button>
           )}
 
-          {status === 'pending' && (
-            <Button type="button" className="flex-1 text-[#FFD149]">
-              Schedule
-            </Button>
+          {status === 'pending' && application && (
+            <ScheduleModal
+              application={application}
+              onApplicationUpdate={
+                onApplicationUpdate
+                  ? (applicationId: string, data: any) => onApplicationUpdate(applicationId, data)
+                  : () => {}
+              }
+            />
           )}
         </div>
 

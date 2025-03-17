@@ -63,11 +63,9 @@ function EmployerJobPage() {
     }
   };
 
-  const handleUpdateApplicationStatus = async (applicationId: string, status: 'invited' | 'offered' | 'rejected') => {
+  const handleUpdateApplication = async (applicationId: string, data: any) => {
     try {
-      const res = await applicationApi.updateApplication(applicationId, {
-        status: status,
-      });
+      const res = await applicationApi.updateApplication(applicationId, data);
 
       const updatedApplication: Application = res.data.data;
 
@@ -76,6 +74,11 @@ function EmployerJobPage() {
           application.id === updatedApplication.id ? updatedApplication : application,
         ),
       );
+
+      toast({
+        title: 'Success',
+        description: 'Application updated successfully',
+      });
     } catch (error: AxiosError | any) {
       console.log(error);
     }
@@ -144,7 +147,7 @@ function EmployerJobPage() {
                 application={application}
                 user={application.user}
                 status="pending"
-                onApplicationUpdate={handleUpdateApplicationStatus}
+                onApplicationUpdate={handleUpdateApplication}
               />
             ))}
           </div>
@@ -158,7 +161,7 @@ function EmployerJobPage() {
                 application={application}
                 user={application.user}
                 status="invited"
-                onApplicationUpdate={handleUpdateApplicationStatus}
+                onApplicationUpdate={handleUpdateApplication}
               />
             ))}
           </div>
@@ -174,7 +177,7 @@ function EmployerJobPage() {
                 application={application}
                 user={application.user}
                 status="offered"
-                onApplicationUpdate={handleUpdateApplicationStatus}
+                onApplicationUpdate={handleUpdateApplication}
               />
             ))}
           </div>
@@ -190,7 +193,7 @@ function EmployerJobPage() {
                 application={application}
                 user={application.user}
                 status="rejected"
-                onApplicationUpdate={handleUpdateApplicationStatus}
+                onApplicationUpdate={handleUpdateApplication}
               />
             ))}
           </div>

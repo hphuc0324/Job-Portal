@@ -61,4 +61,5 @@ export interface Application {
   phoneNumber: string;
   user: User;
   job: Job;
+  schedule: Date;
 }
