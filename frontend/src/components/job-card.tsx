@@ -10,9 +10,11 @@ import { Link } from 'react-router-dom';
 
 interface JobCardProps {
   job: Job;
+  isFavorite?: boolean;
+  toggleFavorite?: (jobId: string) => void;
 }
 
-function JobCard({ job }: JobCardProps) {
+function JobCard({ job, isFavorite = false, toggleFavorite }: JobCardProps) {
   return (
     <Link to={`/job/${job.slug}`}>
       <Card className="p-4 h-[220px] hover:shadow-lg cursor-pointer">
@@ -25,8 +27,13 @@ function JobCard({ job }: JobCardProps) {
                 Google <Dot className="w-4 h-4" /> {job.location}
               </span>
             </div>
-            <button>
-              <Bookmark />
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                toggleFavorite?.(job.id);
+              }}
+            >
+              <Bookmark className={isFavorite ? 'fill-black' : ''} />
             </button>
           </div>
           <div className="flex my-2 gap-1">

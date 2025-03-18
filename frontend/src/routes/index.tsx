@@ -13,6 +13,7 @@ import SearchTalentsPage from '@/pages/common-pages/search-talents';
 import EmployerDashboard from '@/pages/employer-pages/employer-dashboard';
 import EmployerDashboardLayout from '@/components/layouts/employer-dashboard-layout';
 import EmployerJobPage from '@/pages/employer-pages/employer-job-page';
+import HomePage from '@/pages/common-pages/home-page';
 
 export const publicRoutes = [
   {
@@ -20,18 +21,30 @@ export const publicRoutes = [
     children: [
       {
         index: true,
-        element: <>home</>,
+        element: <HomePage />,
       },
       {
         path: '/search',
         children: [
           {
             path: 'jobs',
-            element: <SearchJobsPage />,
+            element: <PrivateRoute allowedRoles={[Roles.CANDIDATE]} />,
+            children: [
+              {
+                index: true,
+                element: <SearchJobsPage />,
+              },
+            ],
           },
           {
             path: 'talents',
-            element: <SearchTalentsPage />,
+            element: <PrivateRoute allowedRoles={[Roles.EMPLOYER]} />,
+            children: [
+              {
+                index: true,
+                element: <SearchTalentsPage />,
+              },
+            ],
           },
         ],
       },
@@ -60,7 +73,7 @@ export const publicRoutes = [
       },
       {
         path: '/post-job/:slug?',
-        element: <PrivateRoute allowedRoles={[Roles.CANDIDATE]} />,
+        element: <PrivateRoute allowedRoles={[Roles.EMPLOYER]} />,
         children: [
           {
             index: true,
@@ -99,5 +112,3 @@ export const publicRoutes = [
     ],
   },
 ];
-
-export const privateRoutes = [];

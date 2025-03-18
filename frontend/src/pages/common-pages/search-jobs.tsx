@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import levelApi from '@/apis/level-api';
 import categoryApi from '@/apis/category-api';
 import PaginationBar from '@/components/pagination-bar';
+import useFavorite from '@/hooks/use-favorite';
 
 function SearchJobsPage() {
   const { title, location, minSalary, maxSalary, level, categories, type, pagination, setFilters } = useJobFilters();
@@ -31,6 +32,7 @@ function SearchJobsPage() {
     totalPages: 0,
   });
   const { toast } = useToast();
+  const { favoriteList, toggleFavorite } = useFavorite();
 
   const clearFilters = () => {
     setFilters({
@@ -238,7 +240,7 @@ function SearchJobsPage() {
             </div>
           </div>
           <div className="my-8 flex-1">
-            <JobList jobs={jobData.jobs} />
+            <JobList jobs={jobData.jobs} favoriteList={favoriteList} toggleFavorite={toggleFavorite} />
 
             <PaginationBar
               currentPage={pagination.page}

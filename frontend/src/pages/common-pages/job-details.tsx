@@ -1,18 +1,13 @@
 import jobApi from '@/apis/job-api';
 import JobDetailsComponent from '@/components/job-details-component';
 import JobList from '@/components/job-list';
-import ApplyModal from '@/components/modals/apply-modal';
-import Editor from '@/components/richtext-editor/editor';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import UserAvatar from '@/components/user-avatar';
+import useFavorite from '@/hooks/use-favorite';
 import { useToast } from '@/hooks/use-toast';
 import { Job } from '@/types/dtos';
 import { Roles } from '@/types/schemas/register';
 import { AxiosError } from 'axios';
-import { Dot, MapPin, BriefcaseBusiness, CircleDollarSign, Clock, Bookmark } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const temp: Job = {
   id: 'something',
@@ -45,6 +40,7 @@ function JobDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
   const { toast } = useToast();
   const [job, setJob] = useState<Job | null>(null);
+  const { favoriteList, toggleFavorite } = useFavorite();
 
   useEffect(() => {
     const handleFetchJobDetails = async () => {
@@ -68,11 +64,20 @@ function JobDetailsPage() {
 
   return (
     <div className="w-screen max-w-screen-xl mx-auto p-8 flex gap-8">
-      <div className="w-full max-w-[70%]">{job && <JobDetailsComponent job={job} />}</div>
+      <div className="w-full max-w-[70%]">
+        {job && (
+          <JobDetailsComponent job={job} isFavorite={favoriteList.includes(job.id)} onFavoriteToggle={toggleFavorite} />
+        )}
+      </div>
 
       <div className="max-w-[30%]">
         <h2 className="font-bold text-[24px] mb-8">Recommended jobs</h2>
-        <JobList jobs={[temp, temp, temp, temp]} jobPerLine={1} />
+        <JobList
+          jobs={[temp, temp, temp, temp]}
+          jobPerLine={1}
+          favoriteList={favoriteList}
+          toggleFavorite={toggleFavorite}
+        />
       </div>
     </div>
   );

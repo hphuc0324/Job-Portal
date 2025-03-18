@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { Job } from '@/types/dtos';
 import { AxiosError } from 'axios';
 import jobApi from '@/apis/job-api';
+import PrivateRoute from '../router-component/private-route';
+import { Roles } from '@/types/schemas/register';
 
 function EmployerDashboardLayout() {
   const [status, setStatus] = useState<'active' | 'draft' | 'closed'>('active');
@@ -36,6 +38,8 @@ function EmployerDashboardLayout() {
 
   return (
     <div className="flex max-w-screen-xl mx-auto p-4 gap-8">
+      <PrivateRoute allowedRoles={[Roles.EMPLOYER]} />
+
       <div className="w-[400px]">
         <span className="text-2xl font-semibold">Posted jobs</span>
         <div className="flex flex-wrap gap-2 my-3">
@@ -60,7 +64,6 @@ function EmployerDashboardLayout() {
             Closed {`[${jobs.filter((job) => job.status === 'closed').length}]`}
           </Button>
         </div>
-
         <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto">
           {jobs
             .filter((job) => job.status === status)

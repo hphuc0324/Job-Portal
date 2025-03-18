@@ -5,9 +5,11 @@ import { cn } from '@/lib/utils';
 interface JobListProps {
   jobs: Job[];
   jobPerLine?: number;
+  favoriteList?: string[];
+  toggleFavorite?: (jobId: string) => void;
 }
 
-function JobList({ jobs, jobPerLine }: JobListProps) {
+function JobList({ jobs, jobPerLine, favoriteList, toggleFavorite }: JobListProps) {
   const col = jobPerLine ? 12 / jobPerLine : undefined;
 
   return (
@@ -18,7 +20,7 @@ function JobList({ jobs, jobPerLine }: JobListProps) {
       )}
     >
       {jobs.map((job, index) => (
-        <JobCard key={index} job={job} />
+        <JobCard key={index} job={job} isFavorite={favoriteList?.includes(job.id)} toggleFavorite={toggleFavorite} />
       ))}
     </div>
   );

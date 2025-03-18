@@ -6,14 +6,23 @@ import { Separator } from '@/components/ui/separator';
 import UserAvatar from '@/components/user-avatar';
 import { Dot, MapPin, BriefcaseBusiness, CircleDollarSign, Clock, Bookmark } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface JobDetailsComponentProps {
   job: Job;
   viewingType?: 'applicant' | 'employer';
   onStatusChange?: (status: 'active' | 'draft' | 'closed') => void;
+  isFavorite?: boolean;
+  onFavoriteToggle?: (jobId: string) => void;
 }
 
-function JobDetailsComponent({ job, viewingType = 'applicant', onStatusChange }: JobDetailsComponentProps) {
+function JobDetailsComponent({
+  job,
+  viewingType = 'applicant',
+  isFavorite,
+  onFavoriteToggle,
+  onStatusChange,
+}: JobDetailsComponentProps) {
   return (
     <div className="w-full">
       <div className="flex items-center gap-2">
@@ -30,8 +39,8 @@ function JobDetailsComponent({ job, viewingType = 'applicant', onStatusChange }:
         {viewingType === 'applicant' && (
           <div className="flex gap-3">
             <ApplyModal job={job} />
-            <Button className="w-12 h-12" variant="outline">
-              <Bookmark className="h-8 w-8" />
+            <Button className="w-12 h-12" variant="outline" onClick={() => onFavoriteToggle?.(job.id)}>
+              <Bookmark className={cn('h-8 w-8', isFavorite && 'fill-black')} />
             </Button>
           </div>
         )}
