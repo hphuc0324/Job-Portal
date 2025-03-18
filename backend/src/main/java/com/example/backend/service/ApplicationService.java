@@ -59,4 +59,10 @@ public class ApplicationService {
 
         return applicationMapper.toApplicationDTO(applicationRepository.save(application));
     }
+
+    public List<ApplicationDTO> getUserApplications(UUID id) {
+        List<Application> applications = applicationRepository.findAllByUserId(id);
+
+        return applications.stream().map((applicationMapper::toApplicationDTO) ).collect(Collectors.toList());
+    }
 }

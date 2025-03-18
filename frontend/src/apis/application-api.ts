@@ -18,6 +18,10 @@ const applicationApi = {
   updateApplication: (id: string, data: any) => {
     return axiosClient.patch(`${baseUrl}/${id}`, data);
   },
+
+  getUserApplications: (userId: string) => {
+    return axiosClient.get(`${baseUrl}/user-applications/${userId}`);
+  },
 };
 
 export default applicationApi;

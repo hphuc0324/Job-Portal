@@ -5,14 +5,17 @@ import AuthProvider from './providers/AuthProvider.tsx';
 import { Toaster } from './components/ui/toaster.tsx';
 import useAuth from './hooks/use-auth.ts';
 import FavoriteProvider from './providers/FavoriteProvider.tsx';
+import AppliedProvider from './providers/AppliedProvider.tsx';
 
 const AppContent = () => {
   const auth = useAuth();
 
   return (
     <FavoriteProvider userId={auth?.user?.id}>
-      <App />
-      <Toaster />
+      <AppliedProvider userId={auth?.user?.id}>
+        <App />
+        <Toaster />
+      </AppliedProvider>
     </FavoriteProvider>
   );
 };

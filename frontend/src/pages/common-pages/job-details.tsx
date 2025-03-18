@@ -1,6 +1,7 @@
 import jobApi from '@/apis/job-api';
 import JobDetailsComponent from '@/components/job-details-component';
 import JobList from '@/components/job-list';
+import useApplied from '@/hooks/use-applied';
 import useFavorite from '@/hooks/use-favorite';
 import { useToast } from '@/hooks/use-toast';
 import { Job } from '@/types/dtos';
@@ -41,6 +42,7 @@ function JobDetailsPage() {
   const { toast } = useToast();
   const [job, setJob] = useState<Job | null>(null);
   const { favoriteList, toggleFavorite } = useFavorite();
+  const { appliedList } = useApplied();
 
   useEffect(() => {
     const handleFetchJobDetails = async () => {
@@ -66,7 +68,12 @@ function JobDetailsPage() {
     <div className="w-screen max-w-screen-xl mx-auto p-8 flex gap-8">
       <div className="w-full max-w-[70%]">
         {job && (
-          <JobDetailsComponent job={job} isFavorite={favoriteList.includes(job.id)} onFavoriteToggle={toggleFavorite} />
+          <JobDetailsComponent
+            job={job}
+            isFavorite={favoriteList.includes(job.id)}
+            onFavoriteToggle={toggleFavorite}
+            isApplied={appliedList.includes(job.id)}
+          />
         )}
       </div>
 

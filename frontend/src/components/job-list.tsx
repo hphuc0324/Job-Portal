@@ -10,13 +10,11 @@ interface JobListProps {
 }
 
 function JobList({ jobs, jobPerLine, favoriteList, toggleFavorite }: JobListProps) {
-  const col = jobPerLine ? 12 / jobPerLine : undefined;
-
   return (
     <div
       className={cn(
-        !col && 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4',
-        col && `sm:grid-cols-${col} gap-4 space-y-4`,
+        !jobPerLine && 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4',
+        jobPerLine && `grid grid-cols-${jobPerLine} gap-4`,
       )}
     >
       {jobs.map((job, index) => (

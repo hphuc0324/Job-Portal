@@ -13,6 +13,7 @@ interface JobDetailsComponentProps {
   viewingType?: 'applicant' | 'employer';
   onStatusChange?: (status: 'active' | 'draft' | 'closed') => void;
   isFavorite?: boolean;
+  isApplied?: boolean;
   onFavoriteToggle?: (jobId: string) => void;
 }
 
@@ -20,6 +21,7 @@ function JobDetailsComponent({
   job,
   viewingType = 'applicant',
   isFavorite,
+  isApplied,
   onFavoriteToggle,
   onStatusChange,
 }: JobDetailsComponentProps) {
@@ -38,7 +40,13 @@ function JobDetailsComponent({
 
         {viewingType === 'applicant' && (
           <div className="flex gap-3">
-            <ApplyModal job={job} />
+            {isApplied ? (
+              <Button disabled={true} className="w-24 h-12">
+                Apply
+              </Button>
+            ) : (
+              <ApplyModal job={job} />
+            )}
             <Button className="w-12 h-12" variant="outline" onClick={() => onFavoriteToggle?.(job.id)}>
               <Bookmark className={cn('h-8 w-8', isFavorite && 'fill-black')} />
             </Button>

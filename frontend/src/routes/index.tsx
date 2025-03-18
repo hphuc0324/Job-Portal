@@ -14,6 +14,7 @@ import EmployerDashboard from '@/pages/employer-pages/employer-dashboard';
 import EmployerDashboardLayout from '@/components/layouts/employer-dashboard-layout';
 import EmployerJobPage from '@/pages/employer-pages/employer-job-page';
 import HomePage from '@/pages/common-pages/home-page';
+import ApplicantDashboard from '@/pages/employer-pages/applicant-dashboard';
 
 export const publicRoutes = [
   {
@@ -64,6 +65,10 @@ export const publicRoutes = [
                 element: <EmployerJobPage />,
               },
             ],
+          },
+          {
+            path: 'applicant',
+            element: <ApplicantDashboard />,
           },
         ],
       },

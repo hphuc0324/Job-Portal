@@ -74,6 +74,21 @@ public class ApplicationController {
         );
     }
 
+    @GetMapping("/user-applications/{id}")
+    public ResponseEntity<ResponseObject> getUserApplications(
+            @PathVariable(name = "id") UUID id
+    ) {
+        List<ApplicationDTO> applications = applicationService.getUserApplications(id);
+
+        return ResponseEntity.ok().body(
+                ResponseObject.builder()
+                        .message("Get user application successfully")
+                        .data(applications)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<ResponseObject> updateApplication(
             @PathVariable(name = "id") UUID id,

@@ -23,7 +23,7 @@ public class FavoriteJobService {
 
         return favorites.stream()
                 .map((favor -> jobService.findById(favor.getJob().getId())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public FavoriteJob addToFavorite(UUID userId, UUID jobId) {

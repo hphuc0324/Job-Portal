@@ -2,6 +2,8 @@ package com.example.backend.controller;
 
 import com.example.backend.annotation.IsProfileOwner;
 import com.example.backend.dto.FavoriteJobDTO;
+import com.example.backend.dto.JobDTO;
+import com.example.backend.mapper.JobMapper;
 import com.example.backend.model.FavoriteJob;
 import com.example.backend.model.Job;
 import com.example.backend.response.ResponseObject;
@@ -14,23 +16,28 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/favorite")
 @RequiredArgsConstructor
 public class FavoriteJobController {
     private final FavoriteJobService favoriteJobService;
+    private final JobMapper jobMapper;
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getFavoriteJobs(
             @PathVariable(name = "id") UUID id
             ) {
         List<Job> jobs = favoriteJobService.getFavoriteJobs(id);
+        List<JobDTO> mappedJobs = jobs.stream().map(
+                jobMapper::toJobDTO
+        ).toList();
 
         return ResponseEntity.ok().body(
                 ResponseObject.builder()
                         .message("Get favorite list successfully")
-                        .data(jobs)
+                        .data(mappedJobs)
                         .status(HttpStatus.OK)
                         .build()
         );

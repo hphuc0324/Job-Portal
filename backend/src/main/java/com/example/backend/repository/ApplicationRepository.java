@@ -13,4 +13,6 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
     List<Application> findAllByJobId(UUID jobId);
 
     List<Application> findAllByJobSlug(String jobSlug);
+
+    List<Application> findAllByUserId(UUID userId);
 }
